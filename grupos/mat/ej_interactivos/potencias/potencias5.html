@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Potencias5</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+var puntos = 0;
+var intentos=0;
+var PotenciaTexto ='';
+var base;
+var exponente = [];
+var Exponente;
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+
+var numeralesUnidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+var numeralesDecenas = ['','diez','veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+var numeralesCentenas = ['','ciento', 'doscientos', 'trecientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos' ,'novecientos'];
+var numerales10 =['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+var numerales20 =['veinte', 'veintiuna', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve'];
+var numero = 0;
+var numeral = '';
+
+function Numeral(numero) {
+
+numeral = '';
+
+var miles = Math.floor(numero/1000);
+var centenas = Math.floor ((numero-miles*1000)/100);
+var decenas = Math.floor ((numero-miles*1000-centenas*100)/10);
+var unidades =  Math.floor (numero-miles*1000-centenas*100-decenas*10);
+
+
+switch(miles) {
+
+case 0:
+	numeral = numeral;
+	break;
+	
+case 1:
+	numeral = numeral + 'mil';
+	break;
+	
+default:
+	numeral = numeral + numeralesUnidades[miles] +'mil';
+	
+}
+
+
+
+switch(centenas) {
+
+case 0:
+	
+	break;
+	
+case 1:
+
+	if (numeral != '') {numeral = numeral + ' ';}
+
+	if ((unidades == 0)&&(decenas ==0)) {
+		numeral = numeral + 'cien';
+	
+	}else {
+		numeral = numeral + 'ciento'	
+	}
+	
+	break;
+	
+default:
+	if (numeral != '') {numeral = numeral + ' ';}
+	numeral = numeral + numeralesCentenas[centenas] ;
+	
+}
+
+
+switch(decenas) {
+
+case 0:
+	
+	break;
+	
+case 1:
+		if (numeral != '') {numeral = numeral + ' ';}	
+		numeral = numeral + numerales10[unidades];
+		break;
+
+	
+case 2:
+		if (numeral != '') {numeral = numeral + ' ';}
+		numeral = numeral + numerales20[unidades];
+		break;
+
+	
+default:
+	if (numeral != '') {numeral = numeral + ' ';}
+	numeral = numeral + numeralesDecenas[decenas];
+	
+}
+
+
+if ((decenas !=1)&&(decenas != 2)&&(decenas!=0)&&(unidades!=0)) {
+	
+if (numeral != '') {numeral = numeral + ' ';}
+numeral = numeral + ' y '+numeralesUnidades[unidades];
+	
+}else if ((decenas==0)&&(unidades!=0)) {
+
+numeral = numeral +numeralesUnidades[unidades];
+	
+}
+return numeral;	
+}
+
+
+function comprobar() {
+		intentos=intentos+1;
+		baseAlumno = document.getElementById('base').value;
+		exponenteAlumno = document.getElementById('exponente').value;
+		potenciaTextoAlumno =  document.getElementById('potenciaTexto').value;
+		potenciaTextoAlumno = normalizaCadena(potenciaTextoAlumno);
+		
+		
+		var okBase = base == baseAlumno;
+		var okExponente = Exponente == exponenteAlumno;
+		var okPotenciaTexto = (potenciaTexto == potenciaTextoAlumno);
+		var okMensaje ='';
+		
+		if ((okBase)&&(okExponente)&&(okPotenciaTexto)) {
+		okMensaje = 'Lo has hecho bien';
+		document.getElementById('ok').setAttribute('class','bien');
+		document.getElementById('b0').setAttribute('class','visible');
+		document.getElementById('b').setAttribute('class','oculto');
+		puntos = puntos +1;	
+		}else{
+		document.getElementById('ok').setAttribute('class','mal');
+		okMensaje = 'Lo has hecho mal. Has cometido los siguientes errores: <ul>';
+		if (!okBase) {okMensaje = okMensaje + '<li> La base está mal</li>';}
+		if (!okExponente) {okMensaje = okMensaje + '<li> El explonente está mal</li>'}		
+		if (!okPotenciaTexto) {okMensaje = okMensaje + '<li> La potencia está mal escrita </li>'}
+		okMensaje = okMensaje +'</ul>';	
+		}
+		
+
+				
+				document.getElementById('ok').innerHTML=okMensaje;
+			
+		
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				
+					
+				
+			
+
+		
+			
+}
+
+
+function normalizaCadena(cadena) {//para normalizar distintas formas de escribir una cadena
+cadena = cadena.toLowerCase(cadena);
+for (i=1;i<=3;i++) {
+	
+cadena = cadena.replace('elevado al cuadrado','elevado a dos');
+cadena = cadena.replace('elevado al cubo','elevado a tres');
+cadena = cadena.replace('elevado a uno','');	
+}
+
+cadena = cadena.replace('   ',' ');//elimina tres espacios seguidos
+cadena = cadena.replace('  ',' ');//elimina dos espacios seguidos
+while (cadena[cadena.length-1] == ' ' ||cadena[cadena.length-1] == '.'){//elimina espacios y puntos finales
+cadena = cadena.substr(0,cadena.length-1);
+
+}
+
+return cadena;
+
+}
+
+
+function inicio() {
+
+
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaPotencia();
+	
+}
+
+
+
+
+
+function nuevaPotencia() {
+potenciaTexto = '';
+
+expresion = '';
+base= dato (2,13,0);
+exponente[1] = dato (2,8,0);
+exponente[2] = dato (2,8,0);
+
+tipo= dato(1,2,0);
+switch(tipo) {
+	
+
+case 1:// producto
+	exponente[1] = dato (2,8,0);
+	exponente[2] = dato (2,8,0);
+	Exponente= exponente[1]+exponente[2];
+	expresion=  base+'<sup>'+exponente[1]+'</sup>*'+ base+'<sup>'+exponente[2]+'</sup>';
+	potenciaTexto = Numeral(base)+ ' elevado a '+ Numeral(Exponente); 
+	break;
+	
+case 2:
+	exponente[1] = dato (4,10,0);
+	exponente[2] = dato (2,8,0);
+	while (exponente[2]>=exponente[1]-1){
+		exponente[2] = dato (2,8,0);
+		}
+	Exponente= exponente[1]-exponente[2];
+	expresion=  base+'<sup>'+exponente[1]+'</sup><hr class="fraccion">'+ base+'<sup>'+exponente[2]+'</sup>';
+	potenciaTexto = Numeral(base)+ ' elevado a '+ Numeral(Exponente); 
+	break;
+
+}
+potenciaTexto = Numeral(base)+ ' elevado a '+ Numeral(Exponente);       	 
+  
+     document.getElementById('ej').innerHTML=expresion;	
+document.getElementById('exponente').innerHTML=exponente;			
+	document.getElementById('exponente').value='';
+		document.getElementById('base').value='';
+		document.getElementById('potenciaTexto').value='';
+     document.getElementById('ok').innerHTML='';
+		document.getElementById('b0').setAttribute('class','oculto');
+		document.getElementById('b').setAttribute('class','visible');
+
+document.getElementById('base').innerHTML=base;	
+document.getElementById('exponente').innerHTML=exponente;			
+
+//document.getElementById('nota').innerHTML='tipo= '+tipo+' x=' +x; // descomenta esta línea para visualizar el tipo y el valor de x
+ok=true;
+	
+}
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+
+<h1>Potencias</h1>
+<h2>Ejercicios de potencias 5</h2>
+
+
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+
+
+<p>Reduce la operación entre potencias de igual base a una potencia y escribela  con letras. </p>
+<p>Por ejemplo: 7<sup>2</sup>*7<sup>3</sup>= 7<sup>5</sup> = siete elevado a cinco</p>
+<br>
+
+<table border="0" >
+	
+	<tr><td id="ej"></td>
+	<td>=</td>
+	<td><input id="base" value= "base" type="text" size="1" ><sup ><input id="exponente" value="exponente" type="text" size="1" ></sup></td> 
+	<td>=</td>
+	<td><input id="potenciaTexto" value="" type="text" size="20" ></span></td>
+	</tr>
+</table>
+
+
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"><input id="b0" class="oculto" value="nueva potencia" type="submit" onclick="nuevaPotencia()"></p> 
+
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+<p id="bravo" style=" color: red; font-size : 150%;"></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>divisiones1</title>
+<link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<script type="text/javascript">
+function genera(){
+return Math.round(Math.random()*1000);
+}
+
+	
+
+  var dato=[genera(),genera(),genera(),genera()]; //datos
+  idato= ['d1','d2','d3','d4'];//id de datos
+  var v=[0,0,0,0];// dividendos
+  var s=['s1','s2','s3', 's4'];// valores introducidos
+  var boton=['b1','b2','b3','b4']; //botones
+  var divisores = [2,3,5,10];
+ var puntos=0;
+ var intentos=0;
+ var control=0;
+ var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var nivel=2;
+
+ 
+var ivalora=['v1','v2','v3', 'v4'];//id donde se escribe la valoración
+ 
+ function divisiones() { 
+
+ 	
+
+for (i=0;i<4;i++){
+ 	document.getElementById(idato[i]).innerHTML= dato[i]*divisores[i];	
+ 		
+ 	document.getElementById(s[1]).value= '';
+ 	
+ 	document.getElementById(ivalora[i]).innerHTML= '';
+ 	document.getElementById('puntos').innerHTML= puntos;
+ 	document.getElementById('intentos').innerHTML= intentos;
+ 	}
+console.log(dato);
+}
+
+
+
+ function valora(i) { 
+	intentos=intentos+1;
+	 
+var solucion = document.getElementById(s[i]).value;
+if(solucion==dato[i]) {
+ document.getElementById(ivalora[i]).innerHTML= ' Bien';
+  puntos=puntos+1;
+ document.getElementById(boton[i]).style.visibility='hidden';
+  control=control+1;
+  controlador();
+  r(i);
+
+ }else {
+ 	 document.getElementById(ivalora[i]).innerHTML= ' Mal';
+ 	
+}
+ 	document.getElementById('puntos').innerHTML= puntos;
+ 	document.getElementById('intentos').innerHTML= intentos;
+}
+
+function controlador() {
+	
+	if (control==4) {
+	control=0;
+		document.getElementById('b1').style.visibility='visible';
+		document.getElementById('b2').style.visibility='visible';
+		document.getElementById('b3').style.visibility='visible';	
+		document.getElementById('b4').style.visibility='visible';	
+		}
+	}
+	
+function r(i) {
+
+	dato[i]=Math.round(Math.random()*1000); //dato1 
+ 	document.getElementById(idato[i]).innerHTML= dato[i]*divisores[i];	 
+ 	document.getElementById(s[i]).value= '';
+ 		
+}	
+	
+
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+}
+
+function inicio() {
+setInterval( 'vida()', 1000);
+divisiones();
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+	
+}
+
+ 	
+</script>    
+
+
+</head>
+<body onload="inicio()">
+<h1>Divisiones simples</h1>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p><span id="d1"></span> dividido entre 2 es igual a 
+<input type="text" id="s1" value="" size="5"/>  <input value="comprobar"id="b1"  onclick="valora(0)"  type="submit">
+<span id="v1"></span></p>
+
+<p><span id="d2"></span> dividido entre 3 es igual a 
+<input type="text" id="s2" value="" size="5"/>  <input value="comprobar" id="b2" onclick="valora(1)"   type="submit">
+<span id="v2"></span></p>
+
+<p><span id="d3"></span> dividido entre 5 es igual a 
+<input type="text" id="s3" value="" size="5"/>  <input value="comprobar" id="b3" onclick="valora(2)"  type="submit">
+<span id="v3"></span></p>
+
+<p><span id="d4"></span> dividido entre 10 es igual a 
+<input type="text" id="s4" value="" size="5"/>  <input value="comprobar" id="b4" onclick="valora(3)"  type="submit">
+<span id="v4"></span></p>
+
+<p><span id="tienes">Tienes</span> <span id="puntos"></span> de <span id="intentos"></span>.</p>
+
+
+<input id="reiniciar" type="submit" value="más divisiones" onclick="divisiones()"> 
+
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+</body>
+</html>

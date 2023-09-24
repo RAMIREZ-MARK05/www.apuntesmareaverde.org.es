@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Simplificar0</title>
+
+<link rel="stylesheet" href="../../../../com/estilo.css" type="text/css">
+<style type="text/css">
+.enlinea{
+display: inline;}
+.fraccion{
+background-color: black;
+height: 3px;
+margin-top: 5px;
+margin-bottom: 5px;}
+tr{ text-align: center;
+width: 50px;}
+input{text-align: center;}
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; }
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; }
+.lleno{ width: 20px;
+height: 20px;
+background: red;}
+.vacio{ width: 20px;
+height: 20px;
+background: grey;}
+.denominador {	
+text-align: center;
+font-size: 30px;}
+.numerador{
+text-align: center;
+font-size: 30px;}
+td{text-align: center;}
+.oculto{
+visibility: hidden;}
+.visible{
+visibility: visible;}
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;}
+var puntos = 0;
+var intentos=0;
+var numerador ;
+var denominador;
+var factor;
+var denominadores = [2,3,5,7,11];
+var numeradorAlumno = 0;
+var celdas =1;
+var clase ;
+var tipo = dato(0,6,0);
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var control = true;
+var colorVida= '#ffff00';
+var bien1
+var bien2
+function comprobar(i) {
+numeradorAlumno= document.getElementById('respuestaNumerador'+i).value;
+denominadorAlumno= document.getElementById('respuestaDenominador'+i).value;
+intentos=intentos+1;
+if (i ==1) {	
+if ((numeradorAlumno == numerador*factor)&&(denominadorAlumno == denominador*factor)) {
+document.getElementById('ok'+i).innerHTML='Bien';
+document.getElementById('ok'+i).setAttribute('class','bien');
+puntos= puntos+1;
+bien1 = true;	
+document.getElementById('comprobar'+i).setAttribute('class','oculto');
+}else {
+document.getElementById('ok'+i).innerHTML='Mal';		
+//document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+document.getElementById('ok'+i).setAttribute('class','mal');}
+}else {				
+if ((numeradorAlumno == numerador)&&(denominadorAlumno == denominador)) {			
+document.getElementById('ok'+i).innerHTML='Bien';
+document.getElementById('ok'+i).setAttribute('class','bien');
+puntos= puntos+1;
+bien2 = true;			
+document.getElementById('comprobar'+i).setAttribute('class','oculto');				
+}else {
+document.getElementById('ok'+i).innerHTML='Mal';
+		
+//document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+document.getElementById('ok'+i).setAttribute('class','mal');
+}}
+if (bien1&&bien2) {
+bien1 = false;
+bien2 = false;
+document.getElementById('nueva').setAttribute('class','visible');}
+document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;			}
+function inicio() {
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaFraccion();	}
+function nuevaFraccion() {
+var tabla = '';
+denominador = denominadores[dato(0,4,0)];
+numerador= dato(1,denominador-1,0);
+//console.log (numerador+' '+denominador);		
+factor = dato(2,6,0);
+tipo = dato(1,2,0);
+if (tipo ==1) {			
+//filas
+for (k=1; k<= factor;k++) {			
+tabla = tabla + '<tr>';
+for (i=1;i<=numerador;i++) {
+tabla = tabla +'<td class="lleno" id="c"'+i+'></td>';}			
+for (i=numerador+1;i<=denominador;i++) {
+tabla = tabla +'<td class="vacio" id="c"'+i+'></td>';}
+tabla = tabla + '</tr>';}
+document.getElementById('tFraccion').innerHTML=tabla;		
+}else {
+//columnas
+tabla = tabla + '<tr>';
+for (k=1; k<= numerador;k++) {
+for (i=1;i<=factor;i++) {
+tabla = tabla +'<td class="lleno" id="c"'+i+'></td>';}
+tabla = tabla + '</tr>';}
+for (k=numerador+1; k<= denominador;k++) {
+tabla = tabla + '<tr>';
+for (i=1;i<=factor;i++) {
+tabla = tabla +'<td class="vacio" id="c"'+i+'></td>';}
+tabla = tabla + '</tr>';}
+document.getElementById('tFraccion').innerHTML=tabla;}
+document.getElementById('respuestaNumerador1').value='';	
+document.getElementById('respuestaDenominador1').value='';
+document.getElementById('respuestaNumerador2').value='';	
+document.getElementById('respuestaDenominador2').value='';		
+document.getElementById('ok1').innerHTML='';
+document.getElementById('ok2').innerHTML='';
+document.getElementById('comprobar1').setAttribute('class','visible');
+document.getElementById('comprobar2').setAttribute('class','visible');
+document.getElementById('nueva').setAttribute('class','oculto');}
+var varVida = 0;
+function vida() {
+var canvas = document.getElementById('canvas');
+var contexto=canvas.getContext('2d');
+contexto.fillStyle = colorVida;
+contexto.fillRect(0, 0, 800, 10);
+contexto.clearRect(600, 0, varVida, 10);
+varVida = varVida - 1;
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+//document.getElementById('b0').setAttribute('class','oculto');
+document.getElementById('ok').setAttribute('class','oculto');
+document.getElementById('puntos').setAttribute('class','bien');
+document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	}
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+//document.getElementById('b0').setAttribute('class','oculto');
+document.getElementById('ok').setAttribute('class','oculto');
+	
+document.getElementById('puntos').setAttribute('class','bien');
+tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}
+	
+}
+
+</script>
+</head>
+<body onload="inicio()">
+<h1> Fracciones</h1>
+<h2>Simplificar fracciones. </h2>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p>Una misma fracción se puede escribir de varias formas. Por ejemplo la siguiente fracción</p>
+
+<table cellspacing="1" >
+<tr> <td class="lleno"></td><td class="lleno"></td><td class="lleno"></td><td class="vacio"></tr>
+<tr> <td class="lleno"></td><td class="lleno"></td><td class="lleno"></td><td class="vacio"></tr>
+<tr> <td class="lleno"></td><td class="lleno"></td><td class="lleno"></td><td class="vacio"></tr>
+</table>
+
+<table ><td>Se puede escribir tanto como </td><td><span>9</span><hr><span>12</span></td><td> o como </td>
+<td><span>3</span><hr><span>4</span></td></table>
+<table ><td>Observa que </td><td><span>9</span><hr><span>12</span></td><td> = </td>
+<td><span>3*3</span><hr><span>4*3</span></td></table>
+<h2>Conclusión</h2>
+<p> Si multiplicamos (o dividimos) el numerador y el denominador de una fracción por el mismo número, el resultado no varía.</p>
+
+<h2>Ejercicio</h2>
+<p>Escribe la fracción indicada desarrollada y simplificada.</p>
+<table cellpadding="1" cellspacing="1" id="tFraccion"></table>
+<table >
+<tr><td></td>
+<td id="ok1"></td><td></td><td id="ok2"></td>
+<td></td>
+</tr>
+<tr>
+<td>Desarrollada<br><input id="comprobar1"  value="comprobar" type="submit" onclick="comprobar(1)"></td>
+<td ><span  ><input type="text" size="1"  id="respuestaNumerador1">
+</span><br><hr class="fraccion">
+<span  ><input type="text" size="1"  id="respuestaDenominador1" ></span>
+</td>
+<td><b> = </b></td>
+<td><span  ><input type="text" size="1"  id="respuestaNumerador2">
+</span><br><hr class="fraccion">
+<span  ><input type="text" size="1"  id="respuestaDenominador2" ></span>
+</td>
+<td>Simplificada<br><input id="comprobar2"  value="comprobar" type="submit" onclick="comprobar(2)"></td>
+</tr>
+</table>
+<p><input id="nueva"  value="nuevaFracción" type="submit" onclick="nuevaFraccion()"></p>
+<p  id="ok"></p>
+<p id="puntos"></p> 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+<footer>
+<hr>
+<p>Autor: Santiago Camblor</p>
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="../../../../com/Marea_Verde2.png" alt=""></td>
+<td><img src="../../../../com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>calculadora1</title>
+<link rel="stylesheet" href="http://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+
+
+td{
+text-align: right;}
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+
+
+</style>
+<script type="text/javascript">
+
+var ejercicios = [];
+var numeroFallosSigno = 0;
+var numeroFallosTabla = 0;
+var indiceEjercicio = 0;
+
+var numeroEjerciciosColumna =4;// numero de ejercicios por columna
+
+var numeroColumnas =1;
+var numeroEjercicios = numeroColumnas * numeroEjerciciosColumna;// número de ejercicios.
+var tiempo;
+var control =true;
+var horaInicio = Date.now();
+var error = 0.02;
+var aciertos = 0;
+var intentos = 0;
+
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+
+
+
+
+
+
+function inicio() {
+var tipo;
+ for (i=0; i<=numeroEjercicios;i++) {// para elegir numeroEjercicios
+ a = dato (-99,99,0);
+ while (a == 0){ a = dato (-9,9,0);}
+ b = dato (1,99,0);
+
+  c = dato (-99,99,0);
+ while (c == 0){ c = dato (-9,9,0);}
+ d = dato (1,99,0);
+
+ 
+ tipo = dato (1,5,0);
+ 
+ 	switch(tipo) {
+ 	
+ 	case 1:
+ 			if (c > 0) {
+ 				
+ 			ejercicios [i] ={expresion: '('+a+'+'+b+')'+c+'=',resultado:(a+b)*c};
+			indiceEjercicio = indiceEjercicio +1;
+			}
+			
+			if (c < 0) {
+ 				
+ 			ejercicios [i] ={expresion: '('+a+'+'+b+')('+c+')=',resultado:(a+b)*c};
+			indiceEjercicio = indiceEjercicio +1;
+			}
+			
+				
+			break;
+				
+ 	case 2:
+ 
+ 			ejercicios [i] ={expresion: c+'('+a+'+'+b+')'+'=',resultado:(a+b)*c};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+				
+ 	case 3:
+ 
+ 			ejercicios [i] ={expresion: '('+a+'+'+b+')'+'('+c+'+'+d+')'+'=',resultado:(a+b)*(c+d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+				
+ 	case 4:
+ 
+ 			ejercicios [i] ={expresion: '('+a+'+'+b+')'+'/('+c+'+'+d+')'+'=',resultado:(a+b)/(c+d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+	case 5:
+ 
+ 			ejercicios [i] ={expresion: a+'/('+c+'+'+d+')'+'=',resultado:a/(c+d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+			
+	
+
+  }
+  console.log(ejercicios[i]);
+ 
+ }
+
+ // construimos la tabla de ejercicios
+ 
+ var fila = [];
+ var tablaEjercicios = '';
+ var aux = 1;
+ tablaEjercicios = '<tr>';
+ 
+  	for (j=0;j<numeroColumnas;j++) {//construimos las columnas como tablas dentro de una tabla
+ 		
+ 	tablaEjercicios =  tablaEjercicios +'<td><table>';
+ 
+ 		for (i=0;i<numeroEjercicios/numeroColumnas;i++) {
+ 		fila = '<tr> <td> <span id="e'+aux+'" >'+ejercicios[aux].expresion+'</span><input type="text" size="10" id="x'+aux+'" ></td><td  width= "100" id="ok'+aux+'"></td></tr>';
+ 		aux = aux +1;
+ 		tablaEjercicios = tablaEjercicios + fila;
+
+ 		}
+ tablaEjercicios = tablaEjercicios + '</table></td>';
+
+ 	}
+ 	 tablaEjercicios =  tablaEjercicios +'</tr>';;
+ 
+ 
+ 
+ 
+ 	document.getElementById('tablaEjercicios').innerHTML= tablaEjercicios;
+ 
+ 
+ 	control=true;
+ 	document.getElementById('control').setAttribute('class','oculto');
+ 	document.getElementById('tiempo').innerHTML='';
+ 	document.getElementById('fallos').innerHTML='';
+ 	
+}
+
+function comprobar() {
+if (control){
+	var horaFin = Date.now();
+	tiempo = Math.round((horaFin-horaInicio)/1000,0);
+	var valorAlumno;
+	var resultado;
+	var numeroFallos = 0;
+	var error = '';
+	var repasar='';
+	intentos =intentos + 1;
+ 	for (i=1;i<=numeroEjercicios;i++) {
+ 		valorAlumno = document.getElementById('x'+i).value;
+ 		resultado = Math.round(ejercicios[i].resultado*100)/100;
+ 		if (valorAlumno == resultado){
+ 		document.getElementById('ok'+i). innerHTML= 'bien';
+ 		document.getElementById('ok'+i).setAttribute('class','bien');
+ 		aciertos = aciertos +1
+ 		}else {
+ 		document.getElementById('ok'+i). innerHTML= 'mal '+resultado;
+ 		document.getElementById('ok'+i).setAttribute('class','mal');
+ 		
+ 		numeroFallos = numeroFallos + 1;
+ 		 
+ 		
+ 		}
+
+ 	
+ 	}
+		if (numeroFallos>=1) {
+		
+		document.getElementById('fallos').innerHTML= 'Has tenido fallos. Has tenido '+ aciertos + ' aciertos de ' + intentos * numeroEjercicios + ' cálculos.';
+
+	
+		}else {
+		document.getElementById('repasar').innerHTML= 'Muy bien. No has tenido fallos';
+		}
+	
+		document.getElementById('tiempo').innerHTML= 'Has tardado '+ tiempo+ ' segundos en hacer el ejercicio.';	
+		}else{
+		document.getElementById('control').setAttribute('class','visible');
+		}
+		control=false;
+}
+
+
+</script>
+</head>
+<body onload="inicio()">
+<h1>
+Ejercicios de cálculo con calculadora</h1>
+<p>Realiza los ejercicios con la calculadora. Redondea el resultado con dos decimales.</p>
+<table id="tablaEjercicios" border="1">
+
+</table>
+
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"></p>
+<p><input id="b"  value="más ejercicios" type="submit" onclick="inicio()"></p>
+<p id="control" class="oculto"style="color: red; ">Debes pinchar en más ejercicios para realizar un nuevo intento.</p>
+<p id="fallos" style="color: red; "></p>
+<p id="tiempo"></p>
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+</body>
+</html>

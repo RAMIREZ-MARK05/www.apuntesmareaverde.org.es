@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Proporciones 4</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: left;
+font-size: 20px;
+}
+.enunciado{
+text-align: left;
+font-size: 20px;
+}
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+
+
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 20px;
+	
+}
+.oculto{
+visibility: hidden;
+}
+.visible{
+visibility: visible;
+}
+.eliminado{
+display: none;
+}
+
+
+</style>
+
+<script type='text/javascript'>
+
+var solucion;
+var puntos = 0;
+var intentos=0;
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var nivel = 4;
+var incocnitaCantidad;
+var incognitaPrecio;
+
+
+
+function escribeId (texto,id) {
+document.getElementById(id).innerHTML = texto;
+	
+}
+
+function escribeNombre(texto, nombre,numeroNombres){//si hay más de 10 elementos del tipo, cambiar el valor máximo del for
+	for (i=0;i<numeroNombres;i++) {
+		document.getElementsByName(nombre)[i].innerHTML = texto;
+	}
+}
+	
+function borraInput(id) {
+document.getElementById(id).value ='';
+	
+}
+
+function lee(id){//para leer el valor de un input
+return document.getElementById(id).value;
+}
+
+function clase(clase, id) {
+document.getElementById(id).setAttribute("class", clase);
+	
+}
+
+
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+function redondea(numero,decimales) {
+var d = Math.round(numero*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+		
+
+
+
+
+function inicio() {
+
+escribeId(nivel,'nivel');
+escribeId(tiempoEjercicio,'tiempo');
+
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevoEjercicio();
+	
+}
+
+function nuevoEjercicio() {
+var total = dato (15,80,0);
+var parte = dato(total/5,total,0);
+solucion = parte/total*10;
+
+
+escribeId(parte, 'parte');
+escribeId(total, 'total');
+borraInput('respuestaAlumno');
+	clase('visible','comprobar');
+	clase('oculto','nueva');
+
+}
+
+function comprobar() {
+
+intentos = intentos +1;
+respuestaAlumno = lee('respuestaAlumno');
+
+okValor = Math.abs(respuestaAlumno - solucion) < 0.01;
+
+	if (okValor) {
+	escribeId ('Bien', 'ok');
+	clase('bien','ok');
+	puntos = puntos +1;
+	escribeId('Tienes '+ puntos+ ' aciertos de ' + intentos+ ' intentos', 'puntos');
+	clase('oculto','comprobar');
+	clase('visible','nueva');
+	}else {
+	escribeId ('Mal', 'ok');
+	
+		
+	}
+	
+	
+	
+	escribeId('Tienes '+ puntos+ ' aciertos de ' + intentos+ ' intentos', 'puntos');
+}
+
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('mas').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 4 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('mas').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	//document.getElementById('b').setAttribute('class','visible');
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	document.getElementById('tiempo').innerHTML= 'Has tardado '+tiempo+' minutos';
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+<h1>Proporciones <span id="nivel"></span></h1>
+
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p class="enunciado">Un alumno obtiene <span id="parte"></span> puntos en un examen en el que se pueden conseguir un máximo de    <span id="total"> puntos</span>. ¿Cuál es su nota sobre 10?</p>
+<p> Tienen <input id="respuestaAlumno"  type="text" size="3" > puntos sobre 10</p>
+
+
+<p><input id="comprobar"  value="comprobar" type="submit" onclick="comprobar()" ></p>
+<p><input id="nueva"  value="Otro ejercicio" type="submit" onclick="nuevoEjercicio()" ></p>
+
+
+<p id="ok"></p>
+<p id="puntos" class="bien"></p>
+<p id="tiempo"></p>
+
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="https://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="https://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

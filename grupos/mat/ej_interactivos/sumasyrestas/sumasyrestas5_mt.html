@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Cálculo mental</title>
+
+<link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+
+<style type="text/css">
+td{
+text-align: right;}
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+.ejercicio{
+font-size: 200%;
+}
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+
+</style>
+
+
+<script type='text/javascript'>
+
+
+var nivel = 5;
+var puntos = 0;
+var intentos = 0;
+var x  ;
+
+var tipo ;
+var expresion = '';
+
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+
+var colorVida= '#ffff00';
+var correccion = '';
+
+
+
+
+function dato(menor,mayor,decimales) {// funcion para conseguir datos aleatorios
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+function inicio() {
+	document.getElementById('nivel').innerHTML= ' Nivel ' + nivel;
+	document.getElementById('tiempo').innerHTML= tiempoEjercicio;
+}
+
+function comenzar() {
+document.getElementById('ejercicio').setAttribute('class','visible');
+
+document.getElementById('comenzar').setAttribute('class','oculto');
+
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaExpresion();
+	
+}
+
+
+function comprobar(event) {
+		var intro = event.which || event.keyCode;
+		console.log = intro
+    if (intro==13) {
+    	
+   
+
+		intentos=intentos+1;
+		
+		valorAlumno = document.getElementById('x').value;
+
+			if (x == valorAlumno) {
+			// correccion = correccion + '<p class= "bien">'+expresion+'='+x+ '. Lo hiciste bien. </p>';
+				
+			puntos= puntos+1;
+		
+				nuevaExpresion();
+		
+			
+			
+			
+			}else {
+			correccion = correccion + '<p class= "mal">'+expresion+'='+x+ '. Lo hiciste mal. Tu respuesta fue '+valorAlumno+' </p>';
+			
+				nuevaExpresion();
+				
+			}
+		
+			document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+		
+			}
+}
+
+
+var tipo =8;
+function nuevaExpresion() {
+
+
+ a = dato (-9,9,0);
+ while (a == 0){// para evitar ceros
+ a = dato (-9,9,0);
+ }
+ b = dato (1,9,0);
+ c = dato (1,9,0);
+	
+	
+	tipo = dato(0,2,0);
+	switch(tipo) {
+	case 0:	
+				
+				
+        		x=a+b-c;
+        		
+        		expresion= a+'+'+b+'-'+c;// x
+        		break;
+        		
+	case 1:	
+			
+        		x=a-b+c;
+        		
+        		expresion= a+'-'+b+'+'+c;// 
+        		break;        		
+   
+        		
+  	case 2:
+        	
+        		x=a-b-c;
+        		expresion= a+'-'+b+'-'+c;// 
+        		break;
+        		
+   
+ 
+        		     		     	 
+   
+     }
+     
+     
+
+document.getElementById('ok').innerHTML=''
+
+document.getElementById('expresion').innerHTML=expresion;		
+document.getElementById('x').value='';
+	
+
+
+
+}
+var varVida = 0;
+
+function vida() {
+	
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	if (varVida < -600) {//cuando termina el tiempo del ejercicio
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de ' + intentos + ' intentos';	
+	 document.getElementById('errores').innerHTML= correccion;
+	 document.getElementById('correccion').setAttribute('class','visible');
+	}
+	
+
+}
+
+</script>
+</head>
+<body onload="inicio()">
+<h1 >sumas y restas 5</h1>
+<h2 id="nivel" >nivel</h2>
+<p>Tiempo de ejercicio =<span id="tiempo"></span> minutos</p>
+<p> Estos ejercicios deben hacerse diariamente. Concéntrate todo lo que puedas. No hables durante el ejercicio.</p>
+<p>Realiza los cálculos mentalmente. Introduce el valor en la casilla y pulsa intro. Intenta realizar el mayor numero posible de cálculos. </p>
+<p>Cuando estés preparado pulsa en comenzar. El tiempo no comienza hasta ese momento.</p>
+
+<p><button id="comenzar" value="comenzar" type="button" onclick="comenzar()">Comenzar</button></p>
+
+<div class="oculto" id="ejercicio">
+<p class="ejercicio"  ><span id="expresion" ></span>=<input type="text" size="1"  id="x" onkeypress="comprobar(event)"></p> 
+	</div>
+	
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+
+
+
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+<div id="correccion" class="oculto">
+<h2>Relación de errores</h2>
+
+<div id="errores"></div>
+
+
+</div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

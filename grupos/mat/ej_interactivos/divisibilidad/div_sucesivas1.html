@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Divisiones sucesivas 1</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+visibility: hidden;
+}
+.visible{
+visibility: visible;
+}
+.eliminado{
+display: none;
+}
+.enunciado{
+font-size: 140%;
+}
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+var divisores = [2,3,5];
+var primos = [7,11,13,19,23,29,31,37,39,41,43,47,53,59,61,67,71,73,79,83,89];
+var exponente = [];
+var puntos = 0;
+var intentos=0;
+var tiempoEjercicio = 8; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var nivel = 1;
+
+
+function escribeNombre(texto, nombre){//para escribir en todos los elementos con un nombre
+var numeroElementos =document.getElementsByName(nombre).length //número de elementos con ese nombre
+for (i=0; i<numeroElementos;i++){
+document.getElementsByName(nombre)[i].innerHTML = texto;
+
+}
+}
+
+function comprobar(i) {
+		intentos=intentos+1;
+
+		respuestaAlumno = document.getElementById('dividendo'+i).value;
+		
+			if (respuestaAlumno == dividendo[i]) {
+				puntos= puntos+1;	
+				if (i < nivel*2) {
+					
+						
+				document.getElementById('ok'+i).innerHTML='Bien';
+				document.getElementById('ok'+i).setAttribute('class','bien');
+				document.getElementById('comprobar'+i).setAttribute('class','oculto');
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				document.getElementById('divisor'+i).setAttribute('class','visible');
+				i++;
+				document.getElementById('fila'+i).setAttribute('class','visible');
+				document.getElementById('divisor'+i).setAttribute('class','oculto');
+				}else {
+				document.getElementById('ok'+i).innerHTML='Bien';
+				document.getElementById('ok'+i).setAttribute('class','bien');
+				
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				
+				document.getElementById('fin').setAttribute('class','visible');
+				document.getElementById('fin').innerHTML= ' Pincha en nueva división';
+				document.getElementById('divisor'+i).setAttribute('class','visible');
+				document.getElementById('b0').setAttribute('class','visible');	
+				}
+				
+			
+			
+			}else {
+				document.getElementById('ok'+i).innerHTML= 'Mal';
+				document.getElementById('ok'+i).setAttribute('class','mal');
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+			}
+	
+			
+}
+
+
+
+
+			
+	
+		
+			
+
+
+
+
+function inicio() {
+
+document.getElementsByName('nivel')[0].innerHTML=nivel;
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaDescomposicion();
+	
+}
+
+
+
+var fila ='';
+var divisor;
+var dividendo =[];
+
+
+function nuevaDescomposicion() {
+	var exponente = nivel*2;
+	divisor = divisores[dato(0,2,0)];
+
+	dividendo[0] = Math.pow(divisor,exponente)*primos[dato(0,primos.length,0)];
+
+
+	for (i=1;i<=exponente;i++) {
+	dividendo[i] = dividendo [i-1]/divisor;
+	}
+
+
+for (i=1;i<=exponente;i++) {
+
+fila ='';
+fila = fila +'<td id="ok'+i+'" width="100"></td>';
+
+fila = fila +'<td ><input type="text" id="dividendo'+i+'" value="" size="5"/></td>';
+fila = fila +'<td id="divisor'+i+'" style=" border-left-style: solid;">'+divisor+'</td>';
+fila = fila +'<td><input id="comprobar'+i+'"  value="comprobar" type="submit" onclick="comprobar('+i+')" ></td>';
+document.getElementById('fila'+i).innerHTML=fila;
+}
+document.getElementById('dividendo0').innerHTML= dividendo[0];
+document.getElementById('divisor0').innerHTML= divisor;
+for (i=2;i<=exponente;i++) {
+document.getElementById('fila'+i).setAttribute('class','oculto');
+document.getElementById('divisor1').setAttribute('class','oculto');
+}
+
+for (i=2;i<=10; i++) {
+document.getElementById('fila'+i).setAttribute('class','eliminado');	
+}
+document.getElementById('b0').setAttribute('class','oculto');	
+document.getElementById('fin').setAttribute('class','oculto');
+}
+
+
+
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 8 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	//document.getElementById('b').setAttribute('class','visible');
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	document.getElementById('tiempo').innerHTML= 'Has tardado '+tiempo+' minutos';
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+<h1>Divisibilidad</h1>
+<h2>Divisiones consecutivas <span name="nivel"></span></h2>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p class="enunciado">Divide sucesivamente 2 veces <span name="dividendo"></span> entre <span name="divisor"></span>.  </p>
+
+
+<p>Los elementos de una división se llaman dividendo, divisor,  cociente y resto:</p>
+<table>
+<tr>
+	<td>dividendo</td>
+	<td style="border-bottom-style: solid; border-left-style: solid;" >divisor</td>
+</tr>
+<tr>
+	<td>resto</td>
+	<td>cociente</td>
+</tr>
+</table>
+
+
+<p>Ordena los elementos de las divisiones de la siguiente manera:</p>
+<table cellspacing="0" >
+<tr><td style="border-bottom-style: solid; ">dividendo</td><td style="border-bottom-style: solid; border-left-style: solid;">divisor</td></tr>
+<tr><td>cociente</td><td style=" border-left-style: solid;"></td></tr>
+</table>
+
+<p>Los ejercicios están preparados para que los restos sean siempre cero. </p>
+<br>
+
+<table  id="ejercicio" cellspacing="0">
+ <tr id="fila0"><td width="100"></td><td id="dividendo0" ></td><td id="divisor0" style=" border-left-style: solid;"></td><td width="100"></td></tr>
+<tr id="fila1"></tr>
+<tr id="fila2"></tr>
+<tr id="fila3"></tr>
+<tr id="fila4"></tr>
+<tr id="fila5"></tr>
+<tr id="fila6"></tr>
+<tr id="fila7"></tr>
+<tr id="fila8"></tr>
+<tr id="fila9"></tr>
+<tr id="fila10"></tr> 
+
+
+</table>
+
+
+
+<p id="fin" class="bien"></p>
+
+
+
+
+
+
+<p><input id="b0" class="oculto" value="nueva división" type="submit" onclick="nuevaDescomposicion()" style="background: #5d5; color: #c00"></p> 
+
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos" class="bien"></p>
+<p id="tiempo"></p>
+<p id="bravo"class="mal"></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

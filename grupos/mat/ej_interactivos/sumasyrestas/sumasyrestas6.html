@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>sumasyrestas6</title>
+<link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+
+
+td{
+text-align: right;}
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+
+
+</style>
+<script type="text/javascript">
+
+var ejercicios = [];
+var sumando = [];
+var numeroFallosSigno = 0;
+var numeroFallosTabla = 0;
+var indiceEjercicio = 0;
+var numeroSumandos =4;
+
+var numeroEjerciciosColumna =5;// numero de ejercicios por columna
+
+var numeroColumnas =4;
+var numeroEjercicios = numeroColumnas * numeroEjerciciosColumna;// número de ejercicios.
+var tiempo;
+var control =true;
+var horaInicio = Date.now();
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+
+
+
+
+function inicio() {
+
+		var expresion = '';
+		var resultado = 0;
+		
+for (i=0; i<=numeroEjercicios;i++){
+	expresion = '';
+	resultado = 0;
+ 	for (j=0;j<numeroSumandos;j++) {
+ 	sumando[j]=dato (-9,9,0);
+ 		while (sumando[j] == 0){// para evitar ceros
+ 		sumando[j] = dato (-9,9,0);
+ 		}
+ 		if (sumando[j] <0) {
+ 		expresion = expresion + sumando[j];
+ 			
+ 		}else{
+ 		expresion = expresion + '+'+sumando[j];
+ 		}
+ 		
+ 		resultado = resultado + sumando[j];
+ 			
+ 		 		
+ 		
+		
+}
+expresion = expresion + '=';
+
+if (expresion[0] == '+') {expresion = expresion.substr(1,expresion.length-1)// quita signo + inicial
+	
+}
+
+
+
+ejercicios[i] ={expresion: expresion,resultado:resultado};
+
+
+ 
+ }
+ 
+ // construimos la tabla de ejercicios
+ 
+ var fila = [];
+ var tablaEjercicios = '';
+ var aux = 1;
+ tablaEjercicios = '<tr>';
+ 
+  	for (j=0;j<numeroColumnas;j++) {//construimos las columnas como tablas dentro de una tabla
+ 		
+ 	tablaEjercicios =  tablaEjercicios +'<td><table>';
+ 
+ 		for (i=0;i<numeroEjercicios/numeroColumnas;i++) {
+ 		fila = '<tr> <td> <span id="e'+aux+'">'+ejercicios[aux].expresion+'</span><input type="text" size="1" id="x'+aux+'" ></td><td  width= "50" id="ok'+aux+'"></td></tr>';
+ 		aux = aux +1;
+ 		tablaEjercicios = tablaEjercicios + fila;
+
+ 		}
+ tablaEjercicios = tablaEjercicios + '</table></td>';
+
+ 	}
+ 	 tablaEjercicios =  tablaEjercicios +'</tr>';;
+ 
+ 
+ 
+ 
+ 	document.getElementById('tablaEjercicios').innerHTML= tablaEjercicios;
+ 
+ 
+ 	control=true;
+ 	document.getElementById('control').setAttribute('class','oculto');
+ 	document.getElementById('tiempo').innerHTML='';
+ 	document.getElementById('fallos').innerHTML='';
+
+}
+
+function comprobar() {
+if (control){
+	var horaFin = Date.now();
+	tiempo = Math.round((horaFin-horaInicio)/1000,0);
+	var valorAlumno;
+	var resultado;
+	var numeroFallos = 0;
+	var error = '';
+
+
+ 	for (i=1;i<=numeroEjercicios;i++) {
+ 		valorAlumno = document.getElementById('x'+i).value;
+ 		resultado = ejercicios[i].resultado
+ 		if (valorAlumno == resultado) {
+ 		document.getElementById('ok'+i). innerHTML= 'bien';
+ 		document.getElementById('ok'+i).setAttribute('class','bien');
+ 	
+ 		}else {
+ 		document.getElementById('ok'+i). innerHTML= 'mal';	
+ 		document.getElementById('ok'+i).setAttribute('class','mal');
+ 		numeroFallos = numeroFallos +1;
+ 		
+ 		
+ 		}
+
+ 	
+ 	}
+		if (numeroFallos>=1) {
+		
+		document.getElementById('fallos').innerHTML= 'Has tenido '+numeroFallos + ' fallos de ' + numeroEjercicios + ' ejercicios.';
+
+	
+		}else {
+		document.getElementById('repasar').innerHTML= 'Muy bien. no has tenido fallos';
+		}
+	
+		document.getElementById('tiempo').innerHTML= 'Has tardado '+ tiempo+ ' segundos en hacer el ejercicio.';	
+		}else{
+		document.getElementById('control').setAttribute('class','visible');
+		}
+		control=false;
+}
+
+
+</script>
+</head>
+<body onload="inicio()">
+<h1>
+Ejercicios de sumas y restas 6</h1>
+
+<table id="tablaEjercicios" border="1">
+
+</table>
+
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"></p>
+<p><input id="b"  value="más ejercicios" type="submit" onclick="inicio()"></p>
+<p id="control" class="oculto"style="color: red; ">Debes pinchar en más ejercicios para realizar un nuevo intento.</p>
+<p id="fallos" style="color: red; "></p>
+<p id="tiempo"></p>
+
+
+<br>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+</body>
+</html>

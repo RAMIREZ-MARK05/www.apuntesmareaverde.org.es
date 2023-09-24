@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Máximo común divisor</title>
+
+  <link rel="stylesheet" href="http://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+
+sup{
+position: relative;
+bottom: 10px;
+
+}
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+visibility: hidden;
+}
+.visible{
+visibility: visible;
+}
+.eliminado{
+display: none;
+}
+
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+var divisores = [2,3,5];
+var primos = [7,11,13,19,23,29,31,37,39,41,43,47,53,59,61,67,71,73,79,83,89];
+var primo;
+var exponente = [] ;
+var base = [];
+
+
+
+
+function comprobarDivisor(i) {
+	var divisorAlumno = document.getElementById('divisor'+i).value;
+	siguiente = i+1;
+	anterior = i -1;
+	if (i != 0) {
+	
+	dividendo = document.getElementById('dividendo'+i).value;
+	}
+	if (dividendo%divisorAlumno != 0) {
+	document.getElementById('okDivisor'+i).innerHTML = divisorAlumno + ' no es divisor de '+dividendo;
+	document.getElementById('okDivisor'+i).setAttribute('class','mal');
+	
+	}else {
+		if ((divisorAlumno == 2)||(divisorAlumno == 3)||(divisorAlumno == 5)) {
+			document.getElementById('okDivisor'+i).innerHTML = 'Divisor correcto';
+			document.getElementById('okDivisor'+i).setAttribute('class','bien');	
+			document.getElementById('fila'+siguiente).setAttribute('class','visible');
+			document.getElementById('divisor'+siguiente).setAttribute('class','oculto');
+			document.getElementById('comprobarDivisor'+i).setAttribute('class','oculto');
+			
+			if ( i>=1) {
+				document.getElementById('okCociente'+i).setAttribute('class','oculto');		
+			}
+				
+				
+		}else {
+			
+		
+		
+			if ((dividendo%2 == 0)||(dividendo%3 == 0)||(dividendo%5 == 0)){
+			document.getElementById('okDivisor'+i).innerHTML = 'Hay divisores más pequeños.';
+			document.getElementById('okDivisor'+i).setAttribute('class','mal');
+			}else {	
+			if ( i>=1) {
+				document.getElementById('okCociente'+i).setAttribute('class','oculto');		
+			}
+			document.getElementById('okDivisor'+i).innerHTML = 'Divisor correcto';
+			document.getElementById('okDivisor'+i).setAttribute('class','bien');
+			document.getElementById('fila'+siguiente).setAttribute('class','visible');
+			document.getElementById('divisor'+siguiente).setAttribute('class','oculto');
+			document.getElementById('comprobarDivisor'+i).setAttribute('class','oculto');		
+			}		
+		
+		}
+	
+	}	
+	
+
+}
+
+function comprobarCociente(i) {
+		
+		anterior = i-1;
+		if (i == 1) {
+		dividendoCociente = dividendo;
+			
+		}else {
+		dividendoCociente = document.getElementById('dividendo'+anterior).value;	
+		}
+		 
+		cocienteAlumno = document.getElementById('dividendo'+i).value;
+		divisorAlumno = document.getElementById('divisor'+anterior).value;
+		
+		
+			if (dividendoCociente/divisorAlumno == cocienteAlumno) {
+				puntos= puntos+1;	
+				if (cocienteAlumno != 1) {
+				document.getElementById('okDivisor'+anterior).setAttribute('class','oculto');	
+				document.getElementById('comprobarDivisor'+i).setAttribute('class','visible');			
+				document.getElementById('okCociente'+i).innerHTML='Bien';
+				document.getElementById('okCociente'+i).setAttribute('class','bien');
+				document.getElementById('comprobarCociente'+i).setAttribute('class','oculto');
+				
+				document.getElementById('divisor'+i).setAttribute('class','visible');
+
+				}else {
+				document.getElementById('okDivisor'+anterior).setAttribute('class','oculto');	
+				document.getElementById('okCociente'+i).innerHTML='Bien.';
+				document.getElementById('numero').value='';
+						document.getElementById('okCociente'+i).setAttribute('class','bien');
+				
+					 document.getElementById('fin').innerHTML="Has terminado. Si quieres puedes elegir otro número";
+				document.getElementById('fin').setAttribute('class','bien');
+					
+					
+						document.getElementById('comprobarCociente'+i).setAttribute('class','oculto');
+						
+			
+				}
+			
+			
+			}else {
+				document.getElementById('okCociente'+i).innerHTML= 'Mal';
+				document.getElementById('okCociente'+i).setAttribute('class','mal');
+				
+			}
+	
+			
+
+}
+
+
+
+
+			
+	
+		
+			
+
+
+
+
+function inicio() {
+document.getElementById('numero').value='';
+
+}
+
+
+
+var fila ='';
+var divisor;
+var dividendo ;
+
+
+function numero() {
+
+	dividendo=document.getElementById("numero").value;
+document.getElementById('fila0').innerHTML=  '<td ></td><td width="100"></td><td id="dividendo0" ></td> <td  style=" border-left-style: solid;"><input type="text" id="divisor0" value="" size="5"/></td><td><input id="comprobarDivisor0"  value="comprobar divisor" type="submit" onclick="comprobarDivisor(0)" ></td><td id="okDivisor0"  ></td><td width="100"></td></tr>';
+
+
+	document.getElementById('divisor0').value='';
+document.getElementById('dividendo0').innerHTML= dividendo;
+document.getElementById('divisor0').innerHTML= divisor;
+for (i=1;i<=10;i++) {
+document.getElementById('fila'+i).setAttribute('class','oculto')
+
+}
+	
+
+
+
+for (i=1;i<=10;i++) {
+
+fila ='';
+fila = fila +'<td id="okCociente'+i+'" width="100"></td>';
+fila = fila +'<td><input id="comprobarCociente'+i+'"  value="comprobar cociente" type="submit" onclick="comprobarCociente('+i+')" ></td>';
+
+fila = fila +'<td ><input type="text" id="dividendo'+i+'" value="" size="5"/></td>';
+fila = fila +'<td  style=" border-left-style: solid;"><input type="text" id="divisor'+i+'" value="" size="5"/></td>';
+
+fila = fila +'<td><input id="comprobarDivisor'+i+'"  value="comprobar divisor" type="submit" onclick="comprobarDivisor('+i+')"class="oculto" ></td>';
+fila = fila +'<td id="okDivisor'+i+'" width="300"></td>';
+
+document.getElementById('fila'+i).innerHTML=fila;
+}
+document.getElementById('divisor0').value='';
+document.getElementById('dividendo0').innerHTML= dividendo;
+document.getElementById('divisor0').innerHTML= divisor;
+for (i=1;i<=exponente;i++) {
+document.getElementById('fila'+i).setAttribute('class','oculto');
+document.getElementById('divisor1').setAttribute('class','oculto');
+document.getElementById('comprobarDivisor0').setAttribute('class','visible');
+}
+
+for (i=2;i<=10; i++) {
+document.getElementById('fila'+i).setAttribute('class','oculto');	
+}
+
+
+
+document.getElementById('mas').setAttribute('class','oculto');	
+document.getElementById('fin').setAttribute('class','oculto');
+
+
+}
+
+</script>
+</head>
+<body onload="inicio()">
+<h1>Descomposición en factores</h1>
+<p>Esta web es una herramienta que te ayudará a realizar una descomposición en factores</p>
+<p>Escribe el número  que quieres descomponer como producto de factores primos</p>
+<p> <input id="numero"  type="text" size="1" ></span><input   value="elegir número" type="submit" onclick="numero()"></p>
+<h2>Descomposición en factores primos <span name="nivel"></span></h2>
+
+<p id="fin" class="bien"></p>
+<table  id="ejercicio" cellspacing="0">
+ <tr id="fila0" ></tr>
+<tr id="fila1"></tr>
+<tr id="fila2"></tr>
+<tr id="fila3"></tr>
+<tr id="fila4"></tr>
+<tr id="fila5"></tr>
+<tr id="fila6"></tr>
+<tr id="fila7"></tr>
+<tr id="fila8"></tr>
+<tr id="fila9"></tr>
+<tr id="fila10"></tr> 
+
+
+</table>
+
+
+
+
+
+
+
+
+<p><input id="mas" class="oculto" value="nueva división" type="submit" onclick="nuevaDescomposicion()" style="background: #5d5; color: #c00"></p> 
+
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos" class="bien"></p>
+<p id="tiempo"></p>
+<p id="bravo"class="mal"></p>
+
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

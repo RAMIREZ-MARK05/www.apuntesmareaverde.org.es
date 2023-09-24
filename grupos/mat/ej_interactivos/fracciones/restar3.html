@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">restar3</title>
+
+  <link rel="stylesheet" href="../../../../com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 1px;
+}
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	
+}
+.oculto{
+visibility: hidden;
+}
+.visible{
+visibility: visible;
+}
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+var puntos = 0;
+var intentos=0;
+var numerador  = [];
+var denominador = [];
+var denominadores = [2,3,4,6,12];
+var numeradorAlumno = 0;
+var denominadorAlumno = 1;
+var celdas =1;
+var clase ;
+var tipo = dato(0,6,0);
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var ok= true;
+var calificacion = 0;
+var control = true;
+var nivel=3;
+var colorVida= '#ffff00';
+var error = 0.0001;
+
+function comprobar1() {
+		var  numeradorAlumno1= document.getElementById('respuestaNumerador1').value;
+		var  denominadorAlumno1= document.getElementById('respuestaDenominador1').value;
+		var  numeradorAlumno2= document.getElementById('respuestaNumerador2').value;
+		var  denominadorAlumno2= document.getElementById('respuestaDenominador2').value;
+		var okFraccion1 = numerador[1]/denominador[1] == numeradorAlumno1/denominadorAlumno1;
+		var okFraccion2 = numerador[2]/denominador[2] == numeradorAlumno2/denominadorAlumno2;
+		var okDenominador = denominadorAlumno1 == denominadorAlumno2;
+		var mensajeOk ='';
+		intentos=intentos+1;
+		
+		if ((okFraccion1)&&(okFraccion2)&&(okDenominador)) {
+			
+			
+	
+			
+			
+				mensajeOk='Primer paso bien.';
+				document.getElementById('ok').setAttribute('class','bien');
+				puntos= puntos+1;
+				document.getElementsByName('fraccion3')[0].setAttribute('class','visible');
+			document.getElementsByName('fraccion3')[1].setAttribute('class','visible');
+				document.getElementById('comprobar2').setAttribute('class','visible');
+				document.getElementById('comprobar1').setAttribute('class','oculto');
+				}else {
+				mensajeOk = 'Lo has hecho mal. Has cometido los siguientes errores: <ul>'
+				document.getElementById('ok').setAttribute('class','mal');
+				if (!okFraccion1) {
+				mensajeOk = mensajeOk + '<li>Mal la primera fracción.</li> ';
+					
+				}
+				if (!okFraccion2) {
+				mensajeOk =  mensajeOk + '<li> Mal la segunda fracción. </li>';
+					
+				}
+				if (!okDenominador) {
+				mensajeOk = mensajeOk + '<li>Los denominadores no son iguales.</li> ';
+					
+				}
+				
+				mensajeOk= mensajeOk+ '</ul>';
+				
+		
+				
+				
+			}
+		
+				
+			
+		document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;	
+		document.getElementById('ok').innerHTML=mensajeOk;
+			
+}
+
+function comprobar2() {
+		var  numeradorAlumno3= document.getElementById('respuestaNumerador3').value;
+		var  denominadorAlumno3= document.getElementById('respuestaDenominador3').value;
+
+		var okFraccion3 = (fraccion - numeradorAlumno3/denominadorAlumno3) < error;
+
+		var mensajeOk ='';
+		intentos=intentos+1;
+		
+		if (okFraccion3) {
+			
+			
+	
+			
+			
+				mensajeOk='Lo has hecho bien. Pincha en nueva suma';
+				document.getElementById('ok').setAttribute('class','bien');
+				puntos= puntos+1;
+
+				document.getElementById('nuevaSuma').setAttribute('class','visible');
+				document.getElementById('comprobar2').setAttribute('class','oculto');
+				}else {
+				mensajeOk = 'Lo has hecho mal.'
+				document.getElementById('ok').setAttribute('class','mal');
+				
+					
+				}
+				
+				document.getElementById('ok').innerHTML=mensajeOk;
+				
+		
+				
+				
+			
+		
+				
+			
+		document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;	
+		document.getElementById('ok').innerHTML=mensajeOk;
+			
+}
+
+
+
+function inicio() {
+document.getElementById('titulo').innerHTML='sumar fracciones'+nivel;
+document.getElementById('nivel').innerHTML=nivel;
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaSuma();
+	
+}
+
+
+
+
+
+
+function nuevaSuma() {
+
+		var tabla = '';
+		fraccion = 0 ;
+		
+		for (i=1; i<=2;i++) {
+		numerador[i] = dato(1,9,0);
+		denominador[i] = denominadores[dato(0,4,0)];
+		while (numerador[i] == denominador[i]){numerador[i] = dato(1,9,0);}
+		while (denominador[1] == denominador[2]){denominador[i] = denominadores[dato(0,4,0)];}
+		document.getElementById('numerador'+i).innerHTML=numerador[i];	
+		document.getElementById('denominador'+i).innerHTML=denominador[i];	
+	   fraccion = fraccion - numerador[i]/denominador[i];
+	   
+		}
+		
+			
+		document.getElementById('nuevaSuma').setAttribute('class','oculto');
+		document.getElementById('comprobar1').setAttribute('class','visible');
+		document.getElementById('comprobar2').setAttribute('class','oculto');
+		document.getElementById('respuestaNumerador1').value= '';
+		document.getElementById('respuestaDenominador1').value= '';
+		document.getElementById('respuestaNumerador2').value= '';
+		document.getElementById('respuestaDenominador2').value= '';
+		document.getElementsByName('fraccion3')[0].setAttribute('class','oculto');
+		document.getElementsByName('fraccion3')[1].setAttribute('class','oculto');
+		document.getElementById('respuestaNumerador3').value= '';
+		document.getElementById('respuestaDenominador3').value= '';
+		control=false;
+		numeradorAlumno = 0;
+		
+		
+	
+
+}
+
+var varVida = 0;
+
+function vida() {
+
+	
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('nuevaSuma').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('nuevaSuma').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}	
+	
+}
+
+
+
+</script>
+</head>
+<body onload="inicio()">
+
+<h1>Fracciones</h1>
+<h2>Restar fracciones. Nivel <span id="nivel"></span></h2>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p>Para sumar fracciones con distinto denominador, primero las tienes que transformar en fracciones con el mismo denominador.</p>
+
+<p >Realiza la operación en dos pasos. Primero consigue que los sumandos tengan el mismo denominador y luego suma las fracciones con el mismo denominador.</p>
+
+<table >
+<tr>
+<td><span id="numerador1" class="numerador"> </span><br><hr class="fraccion"><span  id="denominador1" class="denominador" >D1</span></td>
+<td><span class="numerador">-</span></td>
+<td><span id="numerador2" class="numerador"></span> <br><hr class="fraccion"><span id="denominador2" class="denominador" >D1</span></td>
+<td class="numerador">=</td>
+<td><span  class="numerador"><input type="text" size="1"  id="respuestaNumerador1">
+</span><br><hr class="fraccion">
+
+<span class="denominador" ><input type="text" size="1"  id="respuestaDenominador1" ></span></td>
+<td class="numerador">-</td>
+<td><span  class="numerador"><input type="text" size="1"  id="respuestaNumerador2">
+</span><br><hr class="fraccion">
+
+<span class="denominador" ><input type="text" size="1"  id="respuestaDenominador2" ></span></td>
+<td  name="fraccion3"><span class="numerador">=</span></td>
+
+<td name="fraccion3"><span  class="numerador"><input type="text" size="1"  id="respuestaNumerador3">
+</span><br><hr class="fraccion">
+
+<span class="denominador" ><input type="text" size="1"  id="respuestaDenominador3" ></span></td>
+<td width="50"></td>
+</tr>
+<tr>
+<td colspan="4"></td>
+<td colspan="3"><input id="comprobar1"  value="comprobar" type="submit" onclick="comprobar1()"></td>
+
+<td colspan="3"><input id="comprobar2"  value="comprobar" type="submit" onclick="comprobar2()"></td>
+</tr>
+</table>
+
+
+
+<p><input id="nuevaSuma" class="oculto" value="nueva suma" type="submit" onclick="nuevaSuma()"></p>
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="../../../../com/Marea_Verde2.png" alt=""></td>
+<td><img src="../../../../com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

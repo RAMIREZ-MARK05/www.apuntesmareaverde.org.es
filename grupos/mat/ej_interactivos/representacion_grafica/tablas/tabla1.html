@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Tablas 1</title>
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+</style>
+<script type='text/javascript'>
+function y(x){
+if (c<2) {
+	return a*x+b;
+	}else {
+	return a*x-b;	
+	}
+}
+
+function comprobar(a) {
+	if (varVida>-600) {
+	
+
+		valor = y(document.getElementById('x'+a).innerHTML);
+		valorAlumno = document.getElementById('y'+a).value;
+		intentos=intentos+1;
+
+
+		if (valor == valorAlumno) {
+			document.getElementById('ok'+a).innerHTML='bien';
+			puntos= puntos+1;
+		
+			if (puntos==1) {
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+			}else{
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' puntos de '+ intentos;
+			}
+		
+		}else {
+			document.getElementById('ok'+a).innerHTML='mal';
+		}	
+	}else {
+		document.getElementById('puntos').innerHTML= 'Has conseguido '+puntos+' puntos de '+ intentos;
+	}
+
+	
+
+}
+var puntos = 0;
+intentos=0;
+var a = Math.round(Math.random()*10+1);
+var b = Math.round(Math.random()*10+1);
+var c= Math.random();
+function inicio() {
+setInterval( 'vida()', 1000);
+p();
+	
+}
+function p() {
+	
+	if (c<2) {	
+		document.getElementById('funcion').innerHTML=' Calcula la tabla de valores de la función y='+a+'x+'+b;
+	}else {
+		document.getElementById('funcion').innerHTML=' Calcula la tabla de valores de la función y='+a+'x-'+b;	
+		}
+	
+	for (i=0;i<8;i++) {
+	document.getElementById('ok'+i).innerHTML=''	;
+	
+	document.getElementById('y'+i).value=''	;
+	}
+}
+
+function nuevaFuncion() {
+if (puntos%5 ==0){
+	
+
+ a = Math.round(Math.random()*10+1);
+ b = Math.round(Math.random()*10+1);
+ c= Math.random();
+p();
+}
+	
+}
+var varVida = 0;
+
+function vida() {
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	document.getElementById('canvas').getContext('2d');
+	contexto.fillStyle =' #ffff00';
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+
+}
+
+</script>
+</head>
+<body onload="inicio()">
+<h1>
+Tablas de valores</h1>
+<br>
+<p id="funcion">Función</p>
+<table border="1" >
+	<tr><td>x</td><td>y</td></tr>
+	<tr><td id="x0"  >0<td><input type="text" size="5" id="y0"></td> <td width="50px" id="ok0"></td><td><input id="b0"  value="comprobar" type="submit" onclick="comprobar(0)"></td></tr>
+	<tr><td id="x1">1</td><td><input type="text" size="5" id="y1"></td> <td width="50px" id="ok1"></td><td><input id="b0"  value="comprobar" type="submit" onclick="comprobar(1)"></td></tr>
+	<tr><td id="x2">-1</td><td><input type="text" size="5" id="y2"></td> <td width="50px" id="ok2"></td><td><input id="b0"  value="comprobar" type="submit" onclick="comprobar(2)"></td></tr>
+	<tr><td  id="x3">2</td><td><input type="text" size="5" id="y3"></td> <td width="50px" id="ok3"></td><td><input id="b0"  value="comprobar" type="submit" onclick="comprobar(3)"></td></tr>
+	<tr><td  id="x4">-2</td><td><input type="text" size="5" id="y4"></td> <td width="50px" id="ok4"></td><td><input id="b0"  value="comprobar" type="submit" onclick="comprobar(4)"></td></tr>	
+</table>
+<p id="puntos"></p>
+
+<p><input id="b0"  value="nueva función" type="submit" onclick="nuevaFuncion()"></p> 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+</body>
+</html>

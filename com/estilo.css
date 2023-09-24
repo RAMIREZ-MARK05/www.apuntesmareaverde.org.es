@@ -1,0 +1,50 @@
+body {
+  list-style-type: decimal;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 12pt;
+  background-color: #eeffdd;
+}
+p {
+  text-indent: 30px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+h1 {
+  font-size: 200%;
+  color: #009900;
+  text-shadow: #333333 0.05em 0.05em 0.05em;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+}
+h2 {font-size: 150%;
+  color: #006600;
+    font-weight: bold;
+ 
+}
+h3 {
+  font-size: 120%;
+}
+h4 {
+  font-weight: bold;
+
+}
+footer{
+	font-style: italic;
+ text-align: center;
+  font-size: 80%;
+}
+titulo {
+  font-weight: bold;
+  color: #009900;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 300%;
+  text-shadow: #333333 0.05em 0.05em 0.05em;
+}
+pre {
+	color: #009900;
+}
+.rojo {
+	color: #cc0000;
+}

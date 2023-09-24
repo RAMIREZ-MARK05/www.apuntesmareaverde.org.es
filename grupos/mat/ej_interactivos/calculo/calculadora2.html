@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>calculadora2</title>
+<link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+
+.fraccion{
+
+}
+
+td{
+text-align: center;}
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+
+
+</style>
+<script type="text/javascript">
+
+var ejercicios = [];
+var numeroFallosSigno = 0;
+var numeroFallosTabla = 0;
+var indiceEjercicio = 0;
+
+var numeroEjerciciosColumna =5;// numero de ejercicios por columna
+
+var numeroColumnas =2;
+var numeroEjercicios = numeroColumnas * numeroEjerciciosColumna;// número de ejercicios.
+var tiempo;
+var control =true;
+var horaInicio = Date.now();
+var error = 0.02;
+
+
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+
+
+function fraccion (numerador,denominador){
+return '<td>'+numerador+'<br> <hr class="fraccion">'+denominador+'</td>';
+}
+
+
+
+function inicio() {
+var tipo;
+ for (i=0; i<=numeroEjercicios;i++) {// para elegir numeroEjercicios
+ a = dato (-99,99,0);
+ while (a == 0){ a = dato (-99,99,0);}
+ b = dato (2,99,0);
+
+  c = dato (-99,99,0);
+ while (c == 0){ c = dato (-99,990);}
+ d = dato (2,99,0);
+
+ 
+ tipo = dato (1,4,0);
+ 
+ 	switch(tipo) {
+ 	
+
+				
+ 	case 1:
+ 
+ 			ejercicios [i] ={expresion: '<td>'+a+'('+c+'+'+d+')</td>',resultado:a*(c+d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+				
+ 	case 2:
+ 
+ 			ejercicios [i] ={expresion: fraccion (a+'+'+b, c+'+'+d),resultado:(a+b)/(c+d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+
+ 	case 3:
+ 
+ 			ejercicios [i] ={expresion: '<td>('+a+'-'+b+')'+'('+c+'+'+d+')</td>',resultado:(a-b)*(c+d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+			
+ 	case 4:
+ 
+ 			ejercicios [i] ={expresion: '<td>('+a+'+'+b+')'+'('+c+'-'+d+')</td>',resultado:(a+b)*(c-d)};
+			indiceEjercicio = indiceEjercicio +1;	
+			break;
+  }
+ 
+ 
+ 
+ }
+
+ // construimos la tabla de ejercicios
+ 
+ var fila = [];
+ var tablaEjercicios = '';
+ var aux = 1;
+ tablaEjercicios = '<tr>';
+ 
+  	for (j=0;j<numeroColumnas;j++) {//construimos las columnas como tablas dentro de una tabla
+ 		
+ 	tablaEjercicios =  tablaEjercicios +'<td><table cellspacing="10">';
+ 
+ 		for (i=0;i<numeroEjercicios/numeroColumnas;i++) {
+ 		fila = '<tr> <span id="e'+aux+'" text-align="left"; >'+ejercicios[aux].expresion+'</span><td>=<input type="text" size="1" id="x'+aux+'" ></td><td  width= "50" id="ok'+aux+'"></td></tr>';
+ 		aux = aux +1;
+ 		tablaEjercicios = tablaEjercicios + fila;
+
+ 		}
+ tablaEjercicios = tablaEjercicios + '</table></td>';
+
+ 	}
+ 	 tablaEjercicios =  tablaEjercicios +'</tr>';
+ 	 
+ 	 console.log(fila);
+ 
+ 
+ 
+ 
+ 	document.getElementById('tablaEjercicios').innerHTML= tablaEjercicios;
+ 
+ 
+ 	control=true;
+ 	document.getElementById('control').setAttribute('class','oculto');
+ 	document.getElementById('tiempo').innerHTML='';
+ 	document.getElementById('fallos').innerHTML='';
+ 	
+}
+
+function comprobar() {
+if (control){
+	var horaFin = Date.now();
+	tiempo = Math.round((horaFin-horaInicio)/1000,0);
+	var valorAlumno;
+	var resultado;
+	var numeroFallos = 0;
+	var error = '';
+	var repasar='';
+
+ 	for (i=1;i<=numeroEjercicios;i++) {
+ 		valorAlumno = document.getElementById('x'+i).value;
+ 		resultado = Math.round(ejercicios[i].resultado*100)/100;
+ 		if (valorAlumno == resultado){
+ 		document.getElementById('ok'+i). innerHTML= 'bien';
+ 		document.getElementById('ok'+i).setAttribute('class','bien');
+ 	
+ 		}else {
+ 		document.getElementById('ok'+i). innerHTML= 'mal '+resultado;
+ 		document.getElementById('ok'+i).setAttribute('class','mal');
+ 		numeroFallos = numeroFallos +1;
+ 		
+ 		
+ 		
+ 		}
+
+ 	
+ 	}
+		if (numeroFallos>=1) {
+		
+		document.getElementById('fallos').innerHTML= 'Has tenido '+numeroFallos + ' fallos de ' + numeroEjercicios + ' ejercicios.';
+
+	
+		}else {
+		document.getElementById('repasar').innerHTML= 'Muy bien. no has tenido fallos';
+		}
+	
+		document.getElementById('tiempo').innerHTML= 'Has tardado '+ tiempo+ ' segundos en hacer el ejercicio.';	
+		}else{
+		document.getElementById('control').setAttribute('class','visible');
+		}
+		control=false;
+}
+
+
+</script>
+</head>
+<body onload="inicio()">
+<h1>
+Ejercicios de cálculo con calculadora</h1>
+<p>Realiza los ejercicios con la calculadora. Redondea el resultado con dos decimales.</p>
+<table id="tablaEjercicios" border="1"><tbody><tr><td><table><tbody><tr> <td> <span id="e1">(7+1)/(-4+3)=</span><input size="1" id="x1" type="text"></td><td id="ok1" width="50"></td></tr><tr> <td> <span id="e2">(6+8)(-3+7)=</span><input size="1" id="x2" type="text"></td><td id="ok2" width="50"></td></tr><tr> <td> <span id="e3">(6+6)/(-5+4)=</span><input size="1" id="x3" type="text"></td><td id="ok3" width="50"></td></tr><tr> <td> <span id="e4">(6+8)-7=</span><input size="1" id="x4" type="text"></td><td id="ok4" width="50"></td></tr><tr> <td> <span id="e5">(1+3)/(-6+3)=</span><input size="1" id="x5" type="text"></td><td id="ok5" width="50"></td></tr></tbody></table></td><td><table><tbody><tr> <td> <span id="e6">(3+1)3=</span><input size="1" id="x6" type="text"></td><td id="ok6" width="50"></td></tr><tr> <td> <span id="e7">(8+7)(1+5)=</span><input size="1" id="x7" type="text"></td><td id="ok7" width="50"></td></tr><tr> <td> <span id="e8">-2/(6+4)=</span><input size="1" id="x8" type="text"></td><td id="ok8" width="50"></td></tr><tr> <td> <span id="e9">8(-2+8)=</span><input size="1" id="x9" type="text"></td><td id="ok9" width="50"></td></tr><tr> <td> <span id="e10">(3+4)/(-3+5)=</span><input size="1" id="x10" type="text"></td><td id="ok10" width="50"></td></tr></tbody></table></td><td><table><tbody><tr> <td> <span id="e11">8(-1+4)=</span><input size="1" id="x11" type="text"></td><td id="ok11" width="50"></td></tr><tr> <td> <span id="e12">-4(3+3)=</span><input size="1" id="x12" type="text"></td><td id="ok12" width="50"></td></tr><tr> <td> <span id="e13">(4+4)-7=</span><input size="1" id="x13" type="text"></td><td id="ok13" width="50"></td></tr><tr> <td> <span id="e14">1/(2+6)=</span><input size="1" id="x14" type="text"></td><td id="ok14" width="50"></td></tr><tr> <td> <span id="e15">(6+2)/(7+4)=</span><input size="1" id="x15" type="text"></td><td id="ok15" width="50"></td></tr></tbody></table></td><td><table><tbody><tr> <td> <span id="e16">(6+5)/(-2+8)=</span><input size="1" id="x16" type="text"></td><td id="ok16" width="50"></td></tr><tr> <td> <span id="e17">(-7+8)(8+4)=</span><input size="1" id="x17" type="text"></td><td id="ok17" width="50"></td></tr><tr> <td> <span id="e18">(-1+3)(1+7)=</span><input size="1" id="x18" type="text"></td><td id="ok18" width="50"></td></tr><tr> <td> <span id="e19">(-4+7)/(-9+4)=</span><input size="1" id="x19" type="text"></td><td id="ok19" width="50"></td></tr><tr> <td> <span id="e20">(2+8)(-9+8)=</span><input size="1" id="x20" type="text"></td><td id="ok20" width="50"></td></tr></tbody></table></td></tr></tbody></table>
+
+<p><input id="b" value="comprobar" onclick="comprobar()" type="submit"></p>
+<p><input id="b" value="más ejercicios" onclick="inicio()" type="submit"></p>
+<p id="control" class="oculto" style="color: red; ">Debes pinchar en más ejercicios para realizar un nuevo intento.</p>
+<p id="fallos" style="color: red; "></p>
+<p id="tiempo"></p>
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+</body></html>

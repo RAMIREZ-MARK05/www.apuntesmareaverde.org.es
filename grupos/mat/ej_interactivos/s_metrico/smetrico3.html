@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">sistema métrico 3</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+.enunciado{
+font-size: 200%;
+}
+
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+var puntos = 0;
+var intentos=0;
+var numero;
+var exponente;
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var multiplicador = ['m','c','d','','D','H', 'K'];
+var multiplicadorTexto = ['milí','centí','decí','','decá','hectó', 'kiló'];
+var multiplicadorTexto2 = ['mil','cien','diez','','diez','cien', 'mil'];
+var exponente = [-3,-2,-1,0,1,2,3];
+
+var indiceMultiplicador;
+var unidad =['l','g','m'];
+
+var unidadTexto = ['litro','gramo','metro']
+var indiceUnidad
+
+var equivalencia ;
+
+
+function normalizaCadena(cadena) {//para normalizar distintas formas de escribir una cadena
+cadena = cadena.toLowerCase(cadena);
+for (i=1;i<=5;i++) {
+cadena = cadena.replace( '=','es igual a');	
+	
+
+
+cadena = cadena.replace('   ',' ');//elimina tres espacios seguidos
+cadena = cadena.replace('  ',' ');//elimina dos espacios seguidos
+}
+while (cadena[cadena.length-1] == ' ' ||cadena[cadena.length-1] == '.'){//elimina espacios y puntos finales
+cadena = cadena.substr(0,cadena.length-1);
+
+}
+
+return cadena;
+
+}
+
+function comprobar() {
+		intentos=intentos+1;
+		okMensaje = '';
+		
+	
+		
+		resultadoAlumno =  document.getElementById('resultadoAlumno').value;
+		
+		resultadoAlumno = normalizaCadena(resultadoAlumno)
+		
+	
+
+		var ok = resultadoAlumno == resultado
+		var okMensaje ='';
+		
+		if (ok) {
+		okMensaje = 'Lo has hecho bien';
+		document.getElementById('ok').setAttribute('class','bien');
+		document.getElementById('b0').setAttribute('class','visible');
+		document.getElementById('b').setAttribute('class','oculto');
+		puntos = puntos +1;	
+		}else{
+		document.getElementById('ok').setAttribute('class','mal');
+		okMensaje = 'Lo has hecho mal. Inténtalo de nuevo';
+		 
+	
+	
+		
+		}
+		
+
+				
+				document.getElementById('ok').innerHTML=okMensaje;
+			
+		
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				
+					
+				
+			
+
+		
+			
+}
+
+
+
+
+
+function inicio() {
+
+
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nueva();
+	
+}
+
+
+
+
+
+function nueva() {
+
+
+expresion = '';
+
+magnitud= dato (0,3000,0);
+
+indiceUnidad = dato(0,2,0);
+
+
+indiceMultiplicador= dato(0,6,0);
+while(indiceMultiplicador==3){
+var indiceMultiplicador= dato(0,6,0);
+}
+exponente = [-3,-2,-1,0,1,2,3];
+if (exponente[indiceMultiplicador] < 0){
+		
+	
+	var tipo =dato(0,1,0);
+	
+	switch(tipo) {
+		
+		case 0:
+			expresion = '1 '+unidad[indiceUnidad]+' = '+Math.round(1/Math.pow(10,exponente[indiceMultiplicador])*100)/100+' '+multiplicador[indiceMultiplicador]+unidad[indiceUnidad];
+			resultado = 'un '+ unidadTexto[indiceUnidad]+' es igual a '+multiplicadorTexto2[indiceMultiplicador]+' '+multiplicadorTexto[indiceMultiplicador]+unidadTexto[indiceUnidad]+'s';
+
+		break;
+	
+		case 1:
+			expresion = Math.round(1/Math.pow(10,exponente[indiceMultiplicador])*100)/100+' '+multiplicador[indiceMultiplicador]+unidad[indiceUnidad]+' = '+'1 '+unidad[indiceUnidad];
+			resultado = multiplicadorTexto2[indiceMultiplicador]+' '+multiplicadorTexto[indiceMultiplicador]+unidadTexto[indiceUnidad]+'s'+' es igual a '+'un '+ unidadTexto[indiceUnidad];
+		break;
+	
+	
+	
+	}
+}else{
+	var tipo =dato(0,1,0);
+	
+	switch(tipo) {
+		
+		case 0:
+			expresion = Math.round(Math.pow(10,exponente[indiceMultiplicador])*100)/100+' '+unidad[indiceUnidad]+' = '+'1 '+multiplicador[indiceMultiplicador]+unidad[indiceUnidad];
+			resultado = multiplicadorTexto2[indiceMultiplicador]+ ' '+unidadTexto[indiceUnidad]+'s'+' es igual a '+'un'+' '+multiplicadorTexto[indiceMultiplicador]+unidadTexto[indiceUnidad];
+
+		break;
+	
+		case 1:
+			expresion = '1 '+multiplicador[indiceMultiplicador]+unidad[indiceUnidad]+' = '+Math.round(Math.pow(10,exponente[indiceMultiplicador])*100)/100+unidad[indiceUnidad];
+			resultado = 'un '+multiplicadorTexto[indiceMultiplicador]+unidadTexto[indiceUnidad]+' es igual a '+multiplicadorTexto2[indiceMultiplicador]+ ' '+unidadTexto[indiceUnidad]+'s';
+		break;
+	
+	
+	
+	}
+
+
+}
+	 expresion = expresion + '<p>'+'<input id="resultadoAlumno" value="" type="text" size="50" > '+ '</p>';
+  //console.log(resultado);
+     document.getElementById('ej').innerHTML=expresion;	
+
+	
+     document.getElementById('ok').innerHTML='';
+		document.getElementById('b0').setAttribute('class','oculto');
+		document.getElementById('b').setAttribute('class','visible');
+
+		
+
+
+	
+}
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+
+<h1>Sistema métrico</h1>
+<h2>ejercicios 3</h2>
+
+
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+
+
+<p>Escribe la equivalencia entre unidades con palabras. Por ejemplo <b>1 m = 100 cm</b> se debe escribir <b>un metro es igual a cien centímetros</b>. </p>
+
+
+	
+<p id="ej" class="enunciado"></p>
+
+
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"><input id="b0" class="oculto" value="nuevo ejercicio" type="submit" onclick="nueva()"></p> 
+
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+<p id="bravo" style=" color: red; font-size : 150%;"></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

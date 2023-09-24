@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Máximo común divisor</title>
+
+  <link rel="stylesheet" href="http://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+
+sup{
+position: relative;
+bottom: 10px;
+
+}
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+visibility: hidden;
+}
+.visible{
+visibility: visible;
+}
+.eliminado{
+display: none;
+}
+
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+var divisores = [2,3,5];
+var primos = [7,11,13,19,23,29,31,37,39,41,43,47,53,59,61,67,71,73,79,83,89];
+var primo;
+var exponente = [] ;
+var base = [];
+var puntos = 0;
+var intentos=0;
+
+var horaInicio = Date.now();
+var nivel = 1;
+
+var numeralesUnidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+var numeralesDecenas = ['','diez','veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+var numeralesCentenas = ['','ciento', 'doscientos', 'trecientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos' ,'novecientos'];
+var numerales10 =['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+var numerales20 =['veinte', 'veintiuna', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve'];
+
+var potenciaTexto = '';
+
+function normalizaCadena(cadena) {//para normalizar distintas formas de escribir una cadena
+cadena = cadena.toLowerCase(cadena);
+for (i=0;i<cadena.length;i++) {
+cadena = cadena.replace('1','uno');
+cadena = cadena.replace('2','dos');
+cadena = cadena.replace('3','tres');
+cadena = cadena.replace('4','cuatro');
+cadena = cadena.replace('5','cinco');
+cadena = cadena.replace('6','seis');
+cadena = cadena.replace('7','siete');
+cadena = cadena.replace('8','ocho');
+cadena = cadena.replace('9','nueve');
+cadena = cadena.replace('elevado al cuadrado','elevado a dos');
+cadena = cadena.replace('al cuadrado','elevado a dos');
+cadena = cadena.replace('elevado al cubo','elevado a tres');
+cadena = cadena.replace('al cubo','elevado a tres');
+cadena = cadena.replace('elevado a uno','');	
+cadena = cadena.replace('*','por');	
+cadena = cadena.replace('dividido por','entre');
+cadena = cadena.replace('dividido entre','entre');
+cadena = cadena.replace('/','entre');
+cadena = cadena.replace('igual que','igual a');
+cadena = cadena.replace('=','igual a');
+cadena = cadena.replace(' ','');//elimina  espacios 
+//cadena = cadena.replace('undefined','');
+//cadena = cadena.replace('mily','');
+}
+
+return cadena;
+
+}
+
+
+
+function comprobar() {
+	intentos= intentos +1;
+	var valorAlumno = document.getElementById('MCD').value;
+	potenciaTextoAlumno =  document.getElementById('potenciaTexto').value;
+	potenciaTextoAlumno = normalizaCadena(potenciaTextoAlumno);
+	var okPotenciaTexto = (potenciaTexto == potenciaTextoAlumno);
+	
+	if (( valorAlumno == mcd)&& okPotenciaTexto) {
+	puntos = puntos +1;
+	document.getElementById('ok').setAttribute('class','bien');
+	document.getElementById('mas').setAttribute('class','visible');
+	document.getElementById('comprobar').setAttribute('class','oculto');
+	document.getElementById('fin').innerHTML= ' Pincha en nuevo ejercicio';
+	okMensaje = 'Lo has hecho bien';
+	}else {
+	okMensaje = 'Lo has hecho mal.';
+	document.getElementById('ok').setAttribute('class','mal');
+	
+	if (!okPotenciaTexto) {
+		okMensaje = okMensaje +'Te has confuncido al elegir los factores';
+	}	
+	if (valorAlumno != mcd) {
+		okMensaje =okMensaje + 'Te has confuncido al calcular MCD';
+	}	
+		
+	}
+	
+				document.getElementById('ok').innerHTML=okMensaje;
+			
+		
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+		
+}
+
+		
+			
+
+
+
+
+function inicio() {
+
+
+nuevoMCD();
+
+	
+}
+
+
+
+var fila ='';
+var divisor;
+var numero1 ;
+var numero2 ;
+var mcd =[];
+var exponentes1 = [];
+var exponentes2 = [];
+var exponentes_mcd = [];
+var factores1;
+var factores2;
+
+function nuevoMCD() {
+
+//numero1
+numero1 =1;
+
+for (i=0; i<=2;i++) {
+exponentes1[i] = dato (0,3,0);
+if (exponentes1[i] == 0) {
+
+	document.getElementById('base1'+i).setAttribute('class', 'eliminado');
+}
+
+if (exponentes1[i] == 1) {
+
+	document.getElementById('exponente1'+i).setAttribute('class', 'eliminado');
+}
+
+document.getElementById('exponente1'+i).innerHTML=exponentes1[i];
+numero1 = numero1*Math.pow(divisores[i],exponentes1[i]);
+
+}
+//primo = primos[dato(0,primos.length-1,0)]
+// numero1 = numero1*primo;
+
+
+//numero2
+numero2 =1;
+
+for (i=0; i<=2;i++) {
+exponentes2[i] = dato (0,3,0);
+if (exponentes2[i] == 0) {
+	document.getElementById('base2'+i).setAttribute('class', 'eliminado');
+}
+
+if (exponentes2[i] == 1) {
+
+
+	document.getElementById('exponente2'+i).setAttribute('class', 'eliminado');
+}
+
+
+
+document.getElementById('exponente2'+i).innerHTML=exponentes2[i];
+numero2 = numero2*Math.pow(divisores[i],exponentes2[i]);
+factores2 = factores2 + exponentes2[i];
+}
+//primo = primos[dato(0,primos.length-1,0)]
+// numero1 = numero1*primo;
+
+//mcd
+mcd =1;
+
+for (i=0; i<=2;i++) {
+
+	if ( exponentes1[i] <= exponentes2[i]) {
+		exponentes_mcd[i] = exponentes1 [i]	;
+		}else {
+		exponentes_mcd[i] = exponentes2 [i]	;	
+	}
+
+
+mcd = mcd*Math.pow(divisores[i],exponentes_mcd[i]);
+}
+document.getElementById('potenciaTexto').value='';
+
+potenciaTexto = '';
+for (i=0; i<=2;i++) {
+if (exponentes_mcd[i] != 0) {
+		if (potenciaTexto != '') {potenciaTexto= potenciaTexto + ' por ' ;
+			
+		}
+	potenciaTexto= potenciaTexto + PotenciaTexto(divisores[i], exponentes_mcd[i])	;
+	
+}
+
+console.log(potenciaTexto);		
+		
+
+}
+//potenciaTexto= potenciaTexto + Numeral(primo);
+potenciaTexto = normalizaCadena(potenciaTexto);
+
+for (i = 0 ; i <= 1; i++) {
+
+document.getElementsByName('numero1')[i].innerHTML=numero1;
+document.getElementsByName('numero2')[i].innerHTML=numero2;
+document.getElementById('MCD').value='';
+}
+
+
+document.getElementById('MCD').value='';
+document.getElementById('mas').setAttribute('class','oculto')
+document.getElementById('comprobar').setAttribute('class','visible')
+}
+function PotenciaTexto(base,exponente) {
+
+if (exponente == 1) {
+	return Numeral(base); 
+}else {
+	return Numeral(base)+ ' elevado a '+ Numeral(exponente); 
+}
+}
+
+function Numeral(numero) {
+
+numeral = '';
+
+var miles = Math.floor(numero/1000);
+var centenas = Math.floor ((numero-miles*1000)/100);
+var decenas = Math.floor ((numero-miles*1000-centenas*100)/10);
+var unidades =  Math.floor (numero-miles*1000-centenas*100-decenas*10);
+
+
+switch(miles) {
+
+case 0:
+	numeral = numeral;
+	break;
+	
+case 1:
+	numeral = numeral + 'mil';
+	break;
+	
+default:
+	numeral = numeral + numeralesUnidades[miles] +'mil';
+	
+}
+
+
+
+switch(centenas) {
+
+case 0:
+	
+	break;
+	
+case 1:
+
+	if (numeral != '') {numeral = numeral + ' ';}
+
+	if ((unidades == 0)&&(decenas ==0)) {
+		numeral = numeral + 'cien';
+	
+	}else {
+		numeral = numeral + 'ciento'	
+	}
+	
+	break;
+	
+default:
+	if (numeral != '') {numeral = numeral + ' ';}
+	numeral = numeral + numeralesCentenas[centenas] ;
+	
+}
+
+
+switch(decenas) {
+
+case 0:
+	
+	break;
+	
+case 1:
+		if (numeral != '') {numeral = numeral + ' ';}	
+		numeral = numeral + numerales10[unidades];
+		break;
+
+	
+case 2:
+		if (numeral != '') {numeral = numeral + ' ';}
+		numeral = numeral + numerales20[unidades];
+		break;
+
+	
+default:
+	if (numeral != '') {numeral = numeral + ' ';}
+	numeral = numeral + numeralesDecenas[decenas];
+	
+}
+
+
+if ((decenas !=1)&&(decenas != 2)&&(decenas!=0)&&(unidades!=0)) {
+	
+if (numeral != '') {numeral = numeral + ' ';}
+numeral = numeral + ' y '+numeralesUnidades[unidades];
+	
+}else if ((decenas==0)&&(unidades!=0)) {
+
+numeral = numeral +numeralesUnidades[unidades];
+	
+}
+return numeral;	
+}
+
+
+
+</script>
+</head>
+<body onload="inicio()">
+<h1>Maximo Comun Divisor</h1>
+<h2> Nivel 1 </h2>
+
+<p>Calcula el máximo común divisor de <span name="numero1"></span> y  <span name="numero2"></span></p>
+
+<br>
+
+<table>
+	
+	<tr>
+	<td ><span name="numero1"></span> </td>
+	<td>=</td>
+	<td><span id="base10" class="base">2<sup ><span id="exponente10"  ></span></sup>·</span>
+	
+	<span id="base11" class="base">3<sup ><span id="exponente11"  ></span></sup>·</span>
+	
+	<span id="base12" class="base">5<sup ><span id="exponente12" ></span></sup></span>
+	
+	
+	
+	
+	</td> 
+	
+	</tr>
+	
+		<tr>
+	<td ><span name="numero2"></span> </td>
+	<td>=</td>
+	<td><span id="base20" class="base">2<sup ><span id="exponente20"  ></span></sup>·</span>
+	
+	<span id="base21" class="base">3<sup ><span id="exponente21"  ></span></sup>·</span>
+	
+	<span id="base22" class="base">5<sup ><span  id="exponente22"  ></span></sup></span>
+	<span>
+	
+	
+	
+	</td> 
+	
+	</tr>
+	
+	
+	
+</table>
+<p style="font-size: 30px;"><span >MCD</span>=<input id="potenciaTexto" style="text-align: left;"  value="" type="text" size="50" >=<input id="MCD" style="text-align: left;"  value="" type="text" size="3" ></span></p>
+
+<p><input id="comprobar"  value="comprobar" type="submit" onclick="comprobar()"></div>
+
+
+
+
+<p><input id="mas" class="oculto" value="nuevo ejercicio" type="submit" onclick="nuevoMCD()" style="background: #5d5; color: #c00"></p> 
+
+<p id="fin" class="bien"></p>
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos" class="bien"></p>
+<p id="tiempo"></p>
+<p id="bravo"class="mal"></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

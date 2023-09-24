@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">sistema métrico 2</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+var puntos = 0;
+var intentos=0;
+var numero;
+var exponente;
+var tiempoEjercicio = 2; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+
+
+
+function comprobar() {
+		intentos=intentos+1;
+		
+	
+		
+		resultadoAlumno =  document.getElementById('resultado').value;
+	
+		
+		
+	
+
+		var okresultado = Math.abs(resultado -resultadoAlumno) < 0.00001;
+		var okMensaje ='';
+		
+		if (okresultado) {
+		okMensaje = 'Lo has hecho bien';
+		document.getElementById('ok').setAttribute('class','bien');
+		document.getElementById('b0').setAttribute('class','visible');
+		document.getElementById('b').setAttribute('class','oculto');
+		puntos = puntos +1;	
+		}else{
+		document.getElementById('ok').setAttribute('class','mal');
+		okMensaje = 'Lo has hecho mal.';
+	
+	
+		
+		}
+		
+
+				
+				document.getElementById('ok').innerHTML=okMensaje;
+			
+		
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				
+					
+				
+			
+
+		
+			
+}
+
+
+
+
+
+function inicio() {
+
+
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nueva();
+	
+}
+
+
+
+
+
+function nueva() {
+
+
+expresion = '';
+var decimales = dato(0,3,0);
+numero= dato (2,3000,decimales);
+exponente = dato (2,5,0);
+var potencia10 = Math.pow(10,exponente)
+
+tipo= dato(1,2,0);
+switch(tipo) {
+	
+
+case 1:// producto
+	
+	
+	expresion = numero+'*10'+'<sup>'+exponente+'</sup>';
+	resultado= numero* Math.pow(10,exponente);
+	break; 
+	
+case 2:
+	expresion = numero+'<hr class="fraccion">'+'10<sup>'+exponente+'</sup>';
+	resultado= numero/ Math.pow(10,exponente);
+	break;
+
+}
+      	 
+  
+     document.getElementById('ej').innerHTML=expresion;	
+
+		
+		document.getElementById('resultado').value='';
+     document.getElementById('ok').innerHTML='';
+		document.getElementById('b0').setAttribute('class','oculto');
+		document.getElementById('b').setAttribute('class','visible');
+
+		
+
+
+	
+}
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+
+<h1>Sistema métrico</h1>
+<h2>ejercicios 2</h2>
+<p>Multiplicaciones y divisiones por potencias de 10.</p>
+
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+
+
+<p>Calcula: </p>
+
+<table border="0" >
+	
+	<tr><td id="ej"></td>
+	<td>=</td>
+	
+	<td><input id="resultado" value="" type="text" size="20" ></span></td>
+	</tr>
+</table>
+
+
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"><input id="b0" class="oculto" value="nueva potencia" type="submit" onclick="nueva()"></p> 
+
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+<p id="bravo" style=" color: red; font-size : 150%;"></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

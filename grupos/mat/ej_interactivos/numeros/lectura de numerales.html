@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Numerales</title>
+<link rel="stylesheet" href="../../../../com/estilo.css" type="text/css">
+
+<style type="text/css">
+td{text-align: right;}
+tr{text-align: center;
+        width: 50px; }
+input{text-align: left;}
+.oculto{ display: none;}
+.visible{display: block;}
+.bien{color: green;
+font-weight: bolder; 
+text-align: left; }
+.mal{ color: red;
+font-weight: bolder; 
+text-align: left; }
+</style>
+
+<script type="text/javascript">
+var puntos = 0;
+var intentos=0;
+var numeralesUnidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+var numeralesDecenas = ['','diez','veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+var numeralesCentenas = ['','ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos' ,'novecientos'];
+var numerales10 =['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+var numerales20 =['veinte', 'veintiuna', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve'];
+var numero = 0;
+var numeral = '';
+var respuesta = ''
+var horaInicio = Date.now();
+var limiteSuperior = 100;
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+function nuevoNumero() {
+numero = dato ( 11,limiteSuperior,0);
+numeral = '';
+if (limiteSuperior < 10000){limiteSuperior = limiteSuperior*2;	
+}
+var miles = 0;
+miles = Math.floor(numero/1000);
+var centenas = 0;
+centenas = Math.floor ((numero-miles*1000)/100);
+var decenas = 0;
+decenas = Math.floor ((numero-miles*1000-centenas*100)/10);
+var unidades = 0;
+unidades = Math.floor (numero-miles*1000-centenas*100-decenas*10);
+switch(miles) {
+case 0:
+numeral = numeral;
+break;
+case 1:
+numeral = numeral + ' mil';
+break;
+default:
+numeral = numeral + numeralesUnidades[miles] +' mil';	
+}
+
+switch(centenas) {
+case 0:
+break;
+case 1:
+if (numeral != '') {numeral = numeral + ' ';}
+if ((unidades == 0)&&(decenas ==0)) {
+numeral = numeral + 'cien';
+}else {
+numeral = numeral + 'ciento'	
+}
+break;
+default:
+if (numeral != '') {numeral = numeral + ' ';}
+numeral = numeral + numeralesCentenas[centenas] ;
+}
+
+
+switch(decenas) {
+
+case 0:
+	
+	break;
+	
+case 1:
+		if (numeral != '') {numeral = numeral + ' ';}	
+		numeral = numeral + numerales10[unidades];
+		break;
+
+	
+case 2:
+		if (numeral != '') {numeral = numeral + ' ';}
+		numeral = numeral + numerales20[unidades];
+		break;
+
+	
+default:
+	if (numeral != '') {numeral = numeral + ' ';}
+	numeral = numeral + numeralesDecenas[decenas];
+	
+}
+
+
+if ((decenas !=1)&&(decenas != 2)&&(decenas!=0)&&(unidades!=0)) {
+	
+
+numeral = numeral + ' y '+numeralesUnidades[unidades];
+	
+}else if ((decenas==0)&&(unidades!=0)) {
+if (numeral != '') {numeral = numeral + ' ';}
+numeral = numeral + numeralesUnidades[unidades];	
+}
+document.getElementById('numero').innerHTML = numero;
+document.getElementById('b0').setAttribute('class','oculto');
+document.getElementById('b').setAttribute('class','visible');
+document.getElementById('numeral').value='';
+//console.log (numeral);
+}
+function inicio() {
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevoNumero();}
+function comprobar() {
+intentos=intentos+1;		
+valorAlumno = document.getElementById('numeral').value;
+if (numeral == valorAlumno) {
+document.getElementById('ok').setAttribute('class','visible');
+document.getElementById('ok').innerHTML='Lo has hecho bien.';
+document.getElementById('ok').setAttribute('class','bien');
+puntos= puntos+1;
+document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+control = true;
+document.getElementById('b0').setAttribute('class','visible');
+document.getElementById('b').setAttribute('class','oculto');
+}else {
+document.getElementById('ok').innerHTML='Lo has hecho mal.';
+document.getElementById('ok').setAttribute('class','mal');		
+document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+}}
+var varVida = 0;
+function vida() {
+colorVida ='#ffff00';
+var canvas = document.getElementById('canvas');
+var contexto=canvas.getContext('2d');	
+contexto.fillStyle = colorVida;
+contexto.fillRect(0, 0, 800, 10);
+contexto.clearRect(600, 0, varVida, 10);
+varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+document.getElementById('b0').setAttribute('class','oculto');
+document.getElementById('ok').setAttribute('class','oculto');	
+document.getElementById('puntos').setAttribute('class','bien');
+document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';}	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+document.getElementById('b0').setAttribute('class','oculto');
+document.getElementById('ok').setAttribute('class','oculto');
+document.getElementById('puntos').setAttribute('class','bien');
+tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';;}}
+</script>
+</head>
+
+<body onload="inicio()">
+<h1>Lectura de Numerales</h1>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p>Escribe el número <b><span id="numero"></span></b> con letras: <input id="numeral" type="text" size="50" id="x"</p>
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"></p>
+<p><input id="b0"  class = "oculto" value="más ejercicios" type="submit" onclick="nuevoNumero()"></p>
+<p id="control" class="oculto"style="color: red; ">Debes pinchar en más ejercicios para realizar un nuevo intento.</p>
+<p id="fallos" style="color: red; "></p>
+<p id="tiempo"></p>
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+<p id="bravo" style=" color: red; font-size : 150%; "></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+<footer>
+<hr>
+<p>Autor: Santiago Camblor</p>
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="../../../../com/Marea_Verde2.png" alt=""></td>
+<td><img src="../../../../com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+</body>
+</html>

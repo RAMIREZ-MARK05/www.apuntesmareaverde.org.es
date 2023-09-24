@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">multiplicar</title>
+
+  <link rel="stylesheet" href="../../../../com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+var puntos = 0;
+var intentos=0;
+var numerador  = [];
+var denominadores = [];
+var numeradorAlumno = 0;
+var denominadorAlumno = 1;
+var celdas =1;
+var clase ;
+var tipo = dato(0,6,0);
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var ok= true;
+var calificacion = 0;
+var control = true;
+var nivel=1;
+var colorVida= '#ffff00';
+
+
+function comprobar() {
+		var  numeradorAlumno= document.getElementById('respuestaNumerador').value;
+		var  denominadorAlumno= document.getElementById('respuestaDenominador').value;
+		var fraccionAlumno = numeradorAlumno/denominadorAlumno;
+		
+		intentos=intentos+1;
+		if (control == false) {
+			
+	
+			if (fraccionAlumno == fraccion) {
+			
+				document.getElementById('ok').innerHTML='Lo has hecho bien.';
+				document.getElementById('ok').setAttribute('class','bien');
+				puntos= puntos+1;
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				control = true;
+				document.getElementById('b0').setAttribute('class','visible');
+				document.getElementById('b').setAttribute('class','oculto');
+				}else {
+				
+				document.getElementById('ok').innerHTML='Lo has hecho mal.';
+				document.getElementById('ok').setAttribute('class','mal');
+		
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				
+			}
+		
+				}else {
+				document.getElementById('ok').innerHTML='Debes pinchar en nueva fracción.';	
+				}
+			
+			
+		
+			
+}
+
+
+
+function inicio() {
+document.getElementById('titulo').innerHTML='multiplicar fracciones'+nivel;
+document.getElementById('nivel').innerHTML=nivel;
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaFraccion();
+	
+}
+
+
+
+
+
+
+function nuevaFraccion() {
+
+	if (control == true) {
+		var tabla = '';
+		fraccion = 1 ;
+		
+		for (i=1; i<=2;i++) {
+		numerador[i] = dato(1,9,0);
+		denominador [i]=dato(1,9,0)
+		document.getElementById('numerador'+i).innerHTML=numerador[i];	
+		document.getElementById('denominador'+i).innerHTML=denominador [i];	
+	   
+		}
+		fraccion = ( numerador[1]/denominador[1])*( numerador[2]/denominador[2]);
+		
+		
+		document.getElementById('b0').setAttribute('class','oculto');
+		document.getElementById('b').setAttribute('class','visible');
+	
+	
+		document.getElementById('respuestaNumerador').value= '';
+		document.getElementById('respuestaDenominador').value= '';
+		control=false;
+		numeradorAlumno = 0;
+		
+		
+	}else{
+	document.getElementById('ok').innerHTML='Debes resolver la fracción antes de intentar otra.'
+}
+
+}
+
+var varVida = 0;
+
+function vida() {
+
+	
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}		
+	
+}
+
+
+
+</script>
+</head>
+<body onload="inicio()">
+
+<h1>Fracciones</h1>
+<h2>Multiplicar fracciones. Nivel <span id="nivel"></span></h2>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+
+<p >Realiza la operación</p>
+
+<table>
+<tr>
+<td><span id="numerador1" class="numerador"> </span><br><hr class="fraccion"><span  id="denominador1" class="denominador" >D1</span></td>
+<td><span class="numerador">x</span></td>
+<td><span id="numerador2" class="numerador"></span> <br><hr class="fraccion"><span id="denominador2" class="denominador" >D1</span></td>
+<td class="numerador">=</td>
+<td><span  class="numerador"><input type="text" size="1" class="numerador" id="respuestaNumerador">
+</span><br><hr>
+
+<span class="denominador" ><input type="text" size="1" class="denominador" id="respuestaDenominador" ></span><td></td>
+
+
+</tr>
+</table>
+<div style="margin-left :100px;"><span id="numerador" class="numerador"></span><br>
+
+<span id="denominador" class="denominador" ></span></div>
+
+
+<td><input id="b"  value="comprobar" type="submit" onclick="comprobar()"></td><td><input id="b0" class="oculto" value="nueva fracción" type="submit" onclick="nuevaFraccion()"></td> </tr>
+</table>
+<td id="tFracion">
+</tr>
+</table>
+
+<table border="1"id="tFraccion">
+	<tr id="tFraccion"></tr>
+</table>
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="../../../../com/Marea_Verde2.png" alt=""></td>
+<td><img src="../../../../com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

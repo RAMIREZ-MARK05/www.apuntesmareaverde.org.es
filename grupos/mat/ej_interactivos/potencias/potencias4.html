@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo">Potencias 4</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+}
+
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+.lleno{ width: 20px;
+	height: 20px;
+	background: red;
+	}
+
+.vacio{ width: 20px;
+	height: 20px;
+	background: grey;
+	}
+	
+.denominador {
+	
+	text-align: center;
+	font-size: 30px;
+	
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 30px;
+	
+}
+.oculto{
+display: none;
+}
+.visible{
+display: block;
+}
+
+</style>
+
+<script type='text/javascript'>
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+var bases = [2,3,5];
+var exponente = [];
+var puntos = 0;
+var intentos=0;
+var clase ;
+var tipo = dato(0,6,0);
+var tiempoEjercicio = 5; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var ok= true;
+var control = true;
+var nivel=1;
+var ultimos=[];
+var colorVida= '#ffff00';
+var cantidadIntentosValorados = 5;//esta cantidad se incrementa al pasar de nivel
+var cantidadAciertosUltimos = 3; //cantidad de aciertos en los últimos intentos para pasar de nivel. Se incrementa al pasar de nivel
+var controlEcuacion = true;// es falso hasta que se resuelve bien
+var cantidadIntentosValorados = 5;//esta cantidad se incrementa al pasar de nivel
+var cantidadAciertosUltimos = 3; //cantidad de aciertos en los últimos intentos para pasar de nivel. Se incrementa al pasar de nivel
+//var aciertosUltimos = 0;
+
+function valoraNivel() {
+var aciertosUltimos = 0;
+	for (i=0;i<cantidadIntentosValorados-1;i++) {
+		aciertosUltimos = aciertosUltimos + ultimos[i];//sumamos los aciertos de los últimos intentos
+	
+	}
+
+	if (aciertosUltimos>=cantidadAciertosUltimos) {//si hay suficientes aciertos aciertos en los últimos  intentos
+		if (nivel==4) {
+		document.getElementById('bravo').innerHTML='¡¡Bravo!! Has llegado al fin del ejercicio.'
+			
+		}else {
+			
+		cantidadIntentosValorados ++;
+		cantidadAciertosUltimos ++;
+		nivel= nivel+1;
+			for (i=0;i<cantidadIntentosValorados;i++) {
+		ultimos[i]=0;//borramos los aciertos de los último intentos
+	
+	}
+
+
+			}
+	}else {
+	
+	}
+	return aciertosUltimos;
+			
+}
+
+
+function comprobar() {
+		intentos=intentos+1;
+
+		baseAlumno = document.getElementById('base').value;
+		exponenteAlumno = document.getElementById('exponente').value;
+
+			if (base == baseAlumno) {
+				resultadoBase = 'Base bien. ';		
+				}else {
+				resultadoBase = 'Base mal. ';
+				
+			}
+			//console.log(resultadoBase);
+			
+			
+			if (exponente == exponenteAlumno) {
+				resultadoExponente = 'Exponente bien.';
+				}else {
+				resultadoExponente = 'Exponente mal.';
+				}
+			//console.log(resultadoExponente);	
+			
+				
+			if ((base==baseAlumno)&&(exponente == exponenteAlumno)) {
+				
+		
+				if (ok) {
+				document.getElementById('ok').innerHTML='Lo has hecho bien.';
+				document.getElementById('ok').setAttribute('class','bien');
+				puntos= puntos+1;
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+				ok=false;
+				ultimos[(intentos-1)%cantidadIntentosValorados]=1;// si acierto, almacenamos 1
+				controlEcuacion= true; //se permite nueva ecuación
+				document.getElementById('b0').setAttribute('class','visible');
+				document.getElementById('b').setAttribute('class','oculto');
+				}else {
+				document.getElementById('ok').innerHTML='Tienes que pinchar en nueva potencia';
+				}
+			
+			
+			}else {
+				document.getElementById('ok').innerHTML=resultadoBase + resultadoExponente + 'Arregla lo que esté mal.';
+				document.getElementById('ok').setAttribute('class','mal');
+				ultimos[intentos%cantidadIntentosValorados]=0;// si fallo, almacenamos 0
+				document.getElementById('puntos').innerHTML= 'Llevas '+puntos+' punto de '+intentos;
+			}
+	
+			
+}
+
+
+
+
+			
+	
+		
+			
+
+
+
+
+function inicio() {
+
+
+document.getElementById('tiempo').innerHTML=tiempoEjercicio;
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevaPotencia();
+	
+}
+
+
+function reordena(cadena) {
+var cadena1 = [];
+var cadena2 = [];
+
+longitud = cadena.length;
+
+for (i=0; i< longitud;i++) {;//transformamos la cadena en un array
+cadena2[i]=cadena[i];
+}
+
+for (i=0; i< longitud;i++) {
+posicion = dato (i, longitud-1,0);// posición al azar entre i y el final del array
+cadena1 [i] = cadena2 [posicion];// se extrae el carácter de la posición al azar y se pone en la posición i
+
+for (j=posicion; j>i  ;j--) {
+	cadena2 [j] = cadena2 [j-1]; //desplazamos los  demás caracteres una posición a la derecha
+
+	
+}
+}
+cadena='';
+for (i=0; i< longitud;i++) {;//transformamos el array en una cadena
+cadena = cadena + cadena1[i];
+}
+	
+	return cadena;
+}
+
+
+function nuevaPotencia() {
+expresion = 1;
+base= bases[dato (0,2,0)];
+exponente = dato (2,5,0);
+for (i=1;i<=exponente;i++) {
+
+expresion= expresion * base;
+
+	
+}
+expresion = expresion + '=';
+
+
+	
+document.getElementById('bravo').innerHTML=''	
+document.getElementById('ej').innerHTML=expresion;	
+document.getElementById('exponente').innerHTML=exponente;			
+	document.getElementById('exponente').value='';
+		document.getElementById('base').value='';
+
+
+	
+     
+		document.getElementById('b0').setAttribute('class','oculto');
+		document.getElementById('b').setAttribute('class','visible');
+
+		
+
+//document.getElementById('nota').innerHTML='tipo= '+tipo+' x=' +x; // descomenta esta línea para visualizar el tipo y el valor de x
+ok=true;
+	
+}
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 6 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('b0').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+<h1>Potencias</h1>
+<h2>Ejercicios de potencias 4</h2>
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+<p>El número mostrado es una potencia de 2, 3 o 5. Indica cuál es la base y cuál el exponente.</p>
+<br>
+
+<table border="1" >
+	
+	<tr><td id="ej" style="font-size: 20px;"></td>
+	<td><input id="base" value= "base" type="text" size="1"style="font-size: 20px;" ><sup ><input id="exponente" value="exponente" type="text" size="1"style="font-size: 20px;" ></span></sup></td> 
+	</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+<p><input id="b"  value="comprobar" type="submit" onclick="comprobar()"><input id="b0" class="oculto" value="nueva potencia" type="submit" onclick="nuevaPotencia()"></p> 
+
+
+
+
+<p width="50px" id="ok"></p>
+<p id="puntos"></p>
+<p id="bravo" style=" color: red; font-size : 150%; font-weight: blod;"></p>
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="http://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="http://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

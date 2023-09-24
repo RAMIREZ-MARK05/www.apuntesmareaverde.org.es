@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title id="titulo" >Porcentajes 4</title>
+
+  <link rel="stylesheet" href="https://apuntesmareaverde.org.es/com/estilo.css" type="text/css">
+<style type="text/css">
+.fraccion{
+  background-color: black;
+  height: 3px;
+   margin-top: 5px;
+    margin-bottom: 5px;
+}
+.numerador{
+	
+	text-align: center;
+	font-size: 30px;
+}
+tr{ text-align: center;
+
+	width: 50px;
+}
+input{
+text-align: center;
+font-size: 16px;
+padding-top: 0;
+}
+.enunciado{
+text-align: left;
+font-size: 20px;
+}
+
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; 
+
+}
+
+.mal{
+color: red;
+font-weight: bolder; 
+text-align: left; 
+}
+
+
+td{
+	text-align: center;
+	text-align: center;
+	font-size: 20px;
+	
+}
+.oculto{
+visibility: hidden;
+}
+.visible{
+visibility: visible;
+}
+.eliminado{
+display: none;
+}
+
+
+</style>
+
+<script type='text/javascript'>
+
+var solucion;
+var puntos = 0;
+var intentos=0;
+var tiempoEjercicio = 3; //tiempo del ejercicio en minutos
+var tiempo;
+var horaInicio = Date.now();
+var nivel = 4;
+var incocnitaCantidad;
+var incognitaPrecio;
+var porcentaje;
+var total;
+	var solucion1
+	var respuestaAlumno1
+
+function normalizaCadena(cadena) {//para normalizar distintas formas de escribir una cadena
+cadena = cadena.toLowerCase(cadena);
+for (i=0;i<cadena.length;i++) {
+cadena = cadena.replace('elevado al cuadrado','elevado a dos');
+cadena = cadena.replace('elevado al cubo','elevado a tres');
+cadena = cadena.replace('elevado a uno','');	
+cadena = cadena.replace('*','por');	
+cadena = cadena.replace('dividido por','entre');
+cadena = cadena.replace('dividido entre','entre');
+cadena = cadena.replace('/','entre');
+cadena = cadena.replace('igual que','igual a');
+cadena = cadena.replace('es igual a','igual a');
+cadena = cadena.replace('=','igual a');
+cadena = cadena.replace(' ','');//elimina  espacios 
+
+}
+
+return cadena;
+
+}
+
+
+function escribeId (texto,id) {
+document.getElementById(id).innerHTML = texto;
+	
+}
+function escribeNombre(texto, nombre){//para escribir en todos los elementos con un nombre
+var numeroElementos =document.getElementsByName(nombre).length //número de elementos con ese nombre
+for (i=0; i<numeroElementos;i++){
+document.getElementsByName(nombre)[i].innerHTML = texto;
+
+}
+
+}
+
+
+	
+function borraInput(id) {
+document.getElementById(id).value ='';
+	
+}
+
+function lee(id){//para leer el valor de un input
+return document.getElementById(id).value;
+}
+
+function clase(clase, id) {
+document.getElementById(id).setAttribute("class", clase);
+	
+}
+
+
+function dato(menor,mayor,decimales) {
+var d = Math.round((Math.random()*(mayor-menor)+menor)*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+
+function redondea(numero,decimales) {
+var d = Math.round(numero*Math.pow(10,decimales))/Math.pow(10,decimales);
+return d;	
+}
+		
+
+
+
+
+function inicio() {
+
+escribeId(nivel,'nivel');
+escribeId(tiempoEjercicio,'tiempo');
+
+setInterval( 'vida()', 100*tiempoEjercicio);
+nuevoPorcentaje();
+	
+}
+
+function nuevoPorcentaje() {
+ total = dato (50,400,0);
+ porcentaje = dato(10,60,1);
+solucion = total*porcentaje/100
+
+
+escribeNombre(porcentaje, 'porcentaje');
+escribeNombre(total, 'total');
+borraInput('respuestaAlumno1');
+
+borraInput('respuestaAlumno3');
+	clase('visible','comprobar1');
+	clase('oculto','nueva');
+	clase('oculto','paso2');
+	
+}
+function comprobar1() {
+intentos = intentos +1;
+	respuestaAlumno1 = lee('respuestaAlumno1');
+	respuestaAlumno1 = normalizaCadena(respuestaAlumno1);
+	solucion1 = 'x entre '+ total + ' es igual a '+porcentaje+' entre 100';
+	solucion1 = normalizaCadena(solucion1);
+	
+	var ok1 = respuestaAlumno1 == solucion1;
+	
+	
+	if (ok1 ) {
+	mensaje = 'Has hecho bien la primer parte. Continúa';
+
+	
+	puntos = puntos +1;
+	clase('bien','ok1');
+	
+	clase('oculto','comprobar1');
+	clase('visible','paso2');
+	clase('oculto','nueva');
+	}else {
+	mensaje = 'Has cometido algún error. corrígelo'
+	clase('mal','ok1');
+		
+	}
+	escribeId('Tienes '+ puntos+ ' aciertos de ' + intentos+ ' intentos', 'puntos');
+	escribeId (mensaje, 'ok1');
+}
+
+
+
+
+function comprobar2() {
+
+intentos = intentos +1;
+respuestaAlumno3 = lee('respuestaAlumno3');
+
+okPorcentaje = Math.abs(respuestaAlumno3 - solucion) < 0.01;
+
+	if (okPorcentaje) {
+	mensaje = 'Bien. Efectivamente '+ respuestaAlumno3+ ' es el '+porcentaje+ '% de ' +total;
+	escribeId (mensaje, 'ok');
+
+	puntos = puntos +1;
+	escribeId('Tienes '+ puntos+ ' aciertos de ' + intentos+ ' intentos', 'puntos');
+	clase('oculto','comprobar2');
+	clase('visible','nueva');
+	clase('bien','ok');
+	
+	}else {
+	escribeId ('Has cometido algún error. Corrígelo', 'ok');
+	clase('mal','ok')
+		
+	}
+	
+	
+	escribeId('Tienes '+ puntos+ ' aciertos de ' + intentos+ ' intentos', 'puntos');
+}
+
+var varVida = 0;
+
+function vida() {
+
+		colorVida ='#ffff00';
+		
+
+	var canvas = document.getElementById('canvas');
+	var contexto=canvas.getContext('2d');
+	
+	contexto.fillStyle = colorVida;
+	contexto.fillRect(0, 0, 800, 10);
+	contexto.clearRect(600, 0, varVida, 10);
+	varVida = varVida - 1;
+	
+if (varVida < -600) {//cuando termina el tiempo del ejercicio
+	document.getElementById('mas').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+
+	document.getElementById('puntos').setAttribute('class','bien');
+	document.getElementById('puntos').innerHTML= 'Se ha terminado el tiempo del ejercicio. Has conseguido '+puntos+' punto de '+intentos+ ' intentos';	
+	}
+	
+if((intentos > 4 ) && (puntos/intentos >0.8)){//si hay suficientes aciertos e intentos
+	document.getElementById('mas').setAttribute('class','oculto');
+	document.getElementById('ok').setAttribute('class','oculto');
+	//document.getElementById('b').setAttribute('class','visible');
+	document.getElementById('puntos').setAttribute('class','bien');
+	tiempo = Math.round((Date.now() - horaInicio)/60000);//tiempo que ha durado el ejercicio en minutos
+	document.getElementById('puntos').innerHTML= '<p>Has terminado el ejercicio antes de tiempo porque tienes suficientes aciertos.</p><p>Has conseguido '+puntos+' punto de '+intentos+ ' intentos</p><p> Has tardado '+ tiempo + 'minutos </p>';
+	;	
+	document.getElementById('tiempo').innerHTML= 'Has tardado '+tiempo+' minutos';
+	}		
+	
+
+}
+</script>
+</head>
+<body onload="inicio()">
+<h1>Porcentajes <span id="nivel"></span></h1>
+
+
+<p>Tiempo del ejercicio: <span id="tiempo"></span> minutos</p>
+
+<p class="enunciado">Calcula el <span name="porcentaje"></span>% de <span name="total"></span>   </p>
+<p>Trabaja con papel y lápiz para resolverlo y pon el resultado aquí para comprobar que lo has hecho bien</p>
+<h2>Paso 1</h2>
+<p class="enunciado">Escribe la proporción con letras: x dividido entre ..... es igual a ..... dividido entre.....</p>
+<p>Escribe los números con cifras.</p>
+<p><input id="respuestaAlumno1"  type="text" size="40"class="enunciado"> </p>
+
+
+<p><input id="comprobar1"  value="comprobar" type="submit" onclick="comprobar1()" ></p>
+<p id="ok1" class="bien"></p>
+<div id="paso2"><table>
+<h2>Paso 2</h2>
+<p>Ahora resuelve la ecuación</p>
+<tr>
+<td> X<hr class="fraccion"><span name="total"></span></td><td class="numerador">=</td><td><span name="porcentaje"></span><hr class="fraccion">100</td>
+
+
+</tr>
+
+
+</table>
+
+<p class="enunciado">x=<input id="respuestaAlumno3"  type="text" size="4" ></p>
+
+<p><input id="comprobar2"  value="comprobar" type="submit" onclick="comprobar2()" ></p>
+
+
+
+<p><input id="nueva"  value="Otro ejercicio" type="submit" onclick="nuevoPorcentaje()" ></p></div>
+
+
+<p id="ok"></p>
+<p id="puntos" class="bien"></p>
+<p id="tiempo"></p>
+
+ 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+
+
+<footer>
+<hr>
+
+<p>Autor: Santiago Camblor</p>
+
+<p>Todos nuestros materiales tienen licencia creative commons que permite el uso y modificación del material siempre que no sea con fines comerciales, se cite la autoría y se mantenga el mismo tipo de licencia en las modificaciones de la obra.</p>
+<table  width="50%" align="center">
+<tr>
+<td><img src="https://apuntesmareaverde.org.es/com/Marea_Verde2.png" alt=""></td>
+<td><img src="https://apuntesmareaverde.org.es/com/cc.png" alt="" ></td>
+</tr>
+</table>
+</footer>
+
+
+</body>
+</html>

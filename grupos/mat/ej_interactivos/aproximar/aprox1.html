@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title></title>
+<style type="text/css">
+tr{ text-align: center;
+width: 50px;}
+input{text-align: center;}
+.oculto{display: none;}
+.visible{display: block;}
+.bien{
+color: green;
+font-weight: bolder; 
+text-align: left; }
+.mal{color: red;
+font-weight: bolder; 
+text-align: left; }
+}
+</style>
+
+<script type='text/javascript'>
+var tiempo_ejercicio = 800;
+var puntos = 0;
+var intentos=0;
+var a = Math.random()*10;
+var b = Math.round((Math.random()*10)/3+1);
+
+function comprobar() {
+intentos = intentos +1
+var solucion = Math.round(a*Math.pow(10,b))/Math.pow(10,b);
+var alumno = document.getElementById('ejercicio').value
+if (solucion==alumno) {
+document.getElementById('chivato').innerHTML='Lo has hecho bien';
+puntos = puntos+1;
+document.getElementById('nuevo').setAttribute('class','visible');
+document.getElementById('comprobar').setAttribute('class','oculto');}
+else {
+document.getElementById('chivato').innerHTML='Lo has hecho mal. Prueba de nuevo';
+document.getElementById('nuevo').setAttribute('class','visible');
+document.getElementById('comprobar').setAttribute('class','oculto');}	
+document.getElementById('puntos').innerHTML='Tienes '+puntos+' puntos de '+intentos+' intentos';
+if ((puntos >= 2) && ((intentos / puntos) >= 0.8 )) {
+fin()	}}
+
+function inicio() {
+setInterval( 'vida()', 100);
+p();}
+
+function p() {
+document.getElementById('enunciado').innerHTML=' Aproxima el número '+a+ ' con '+ b+' decimales';
+document.getElementById('ejercicio').value='';}
+
+function nuevoEjercicio() {
+a = Math.random()*10;
+b = Math.round((Math.random()*10)/3+1);
+p();	
+document.getElementById('nuevo').setAttribute('class','oculto');
+document.getElementById('comprobar').setAttribute('class','visible');}
+	
+var varVida = 0;
+function vida() {
+var canvas = document.getElementById('canvas');
+var contexto=canvas.getContext('2d');
+document.getElementById('canvas').getContext('2d');
+contexto.fillStyle =' #ffff00';
+contexto.fillRect(0, 0, tiempo_ejercicio, 10);
+contexto.clearRect(600, 0, - varVida, 10);
+varVida = varVida + 1;
+if (varVida >= tiempo_ejercicio) {fin()}}
+function fin(){
+document.getElementById('nuevo').setAttribute('class','oculto');
+document.getElementById('comprobar').setAttribute('class','oculto');
+document.getElementById('fin').setAttribute('class','visible');
+varVida = tiempo_ejercicio;}
+</script>
+</head>
+<body onload="inicio()">
+<h1>
+Aproximaciones</h1>
+<br>
+<p id="enunciado">Enunciado <p/>
+<p><input type="text" size="10" id="ejercicio"><input id="comprobar"  value="comprobar" type="submit" onclick="comprobar()" ></p>
+<p id="chivato"></p>
+<p id="puntos"></p>
+<h3 id="fin" class="oculto">El ejercicio ha terminado</h3>
+<p><input id="nuevo"  value="nuevo ejercicio" type="submit" onclick="nuevoEjercicio()" class="oculto"></p> 
+<div><canvas id="canvas" width="600" height="20"></canvas>   </div>
+</body>
+</html>
